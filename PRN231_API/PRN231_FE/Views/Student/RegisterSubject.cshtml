@@ -1,0 +1,217 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="container pt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Tất cả các môn học</h2>
+            <form action="/register-subject" method="post">
+                <div class="form-group">
+                    <input hidden type="text" name="StudentId" value="StudentId">
+                    <label for="subjectName">Chọn môn học để đăng kí:</label>
+                    <select id="subjectName" name="subjectId" class="form-control">
+                        <!-- Options will be dynamically populated here -->
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Register</button>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            <h2>Các môn đang theo học</h2>
+            <table class="table table-bordered rounded">
+                <thead>
+                    <tr class="text-center">
+                        <th>Tên môn học</th>
+                        <th>Giảng viên</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr>
+                        <td>Mathematics</td>
+                        <td>abc</td>
+                        <td>Active</td>
+                    </tr>
+                    <tr>
+                        <td>Mathematics</td>
+                        <td>abc</td>
+                        <td>Inactive</td>
+                    </tr>
+                    <tr>
+                        <td>Mathematics</td>
+                        <td>abc</td>
+                        <td>Active</td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        <h2>Tất cả các môn học</h2>
+        <div class="mb-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm môn học...">
+            <button id="searchButton" class="btn btn-primary mt-2">Tìm kiếm</button>
+        </div>
+        <table id="subjectsTable" class="table table-bordered rounded">
+            <thead>
+                <tr class="text-center">
+                    <th>Tên môn học</th>
+                    <th>Giảng viên</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                <!-- Dữ liệu sẽ được điền vào đây bằng JavaScript -->
+            </tbody>
+        </table>
+        <div id="pagination" class="text-center">
+            <!-- Điều khiển phân trang sẽ được tạo ra đây -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // URL of your API endpoint
+            const apiUrl = 'http://localhost:5000/api/Subject';
+
+            // Function to fetch subjects and populate the dropdown
+            async function fetchSubjects() {
+                try {
+                    const response = await fetch(apiUrl);
+                    const subjects = await response.json();
+
+                    // Get the select element
+                    const subjectSelect = document.getElementById('subjectName');
+
+                    // Clear existing options
+                    subjectSelect.innerHTML = '';
+
+                    // Add a default option
+                    const defaultOption = document.createElement('option');
+                    defaultOption.text = 'Chọn môn học';
+                    defaultOption.value = '';
+                    subjectSelect.add(defaultOption);
+
+                    // Populate options with subjects from the API
+                    subjects.forEach(subject => {
+                        const option = document.createElement('option');
+                        option.value = subject.subjectId; // Use the actual property name for ID
+                        option.text = subject.subjectName; // Use the actual property name for name
+                        subjectSelect.add(option);
+                    });
+                } catch (error) {
+                    console.error('Error fetching subjects:', error);
+                }
+            }
+
+            // Fetch and populate subjects on page load
+            fetchSubjects();
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const apiUrl = 'http://localhost:5000/api/Subject/subjecttwofields';
+            const rowsPerPage = 5;
+            let currentPage = 1;
+            let subjects = [];
+            let filteredSubjects = [];
+
+            async function fetchSubjects(filter = '') {
+                try {
+                    // Mã hóa URL nếu cần
+                    const encodedFilter = encodeURIComponent(filter);
+                    const url = filter ? `${apiUrl}?$filter=SubjectName eq '${encodedFilter}'` : apiUrl;
+                    const response = await fetch(url);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    subjects = await response.json();
+                    filteredSubjects = subjects;
+                    renderTable();
+                    renderPagination();
+                } catch (error) {
+                    console.error('Lỗi khi lấy dữ liệu môn học:', error);
+                }
+            }
+
+            function renderTable() {
+                const tableBody = document.querySelector('#subjectsTable tbody');
+                tableBody.innerHTML = '';
+
+                const start = (currentPage - 1) * rowsPerPage;
+                const end = start + rowsPerPage;
+                const paginatedSubjects = filteredSubjects.slice(start, end);
+
+                paginatedSubjects.forEach(subject => {
+                    const row = document.createElement('tr');
+                    const nameCell = document.createElement('td');
+                    const teacherCell = document.createElement('td');
+
+                    nameCell.textContent = subject.subjectName || 'Không có dữ liệu';
+                    teacherCell.textContent = subject.teacherName || 'Không có dữ liệu';
+
+                    row.appendChild(nameCell);
+                    row.appendChild(teacherCell);
+                    tableBody.appendChild(row);
+                });
+
+                if (paginatedSubjects.length === 0) {
+                    const noResultsRow = document.createElement('tr');
+                    const noResultsCell = document.createElement('td');
+                    noResultsCell.colSpan = 2;
+                    noResultsCell.textContent = 'Không có kết quả nào';
+                    noResultsRow.appendChild(noResultsCell);
+                    tableBody.appendChild(noResultsRow);
+                }
+            }
+
+            function renderPagination() {
+                const paginationDiv = document.getElementById('pagination');
+                paginationDiv.innerHTML = '';
+
+                const totalPages = Math.ceil(filteredSubjects.length / rowsPerPage);
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageButton = document.createElement('button');
+                    pageButton.textContent = i;
+                    pageButton.className = 'btn btn-primary mx-1';
+                    pageButton.addEventListener('click', () => {
+                        currentPage = i;
+                        renderTable();
+                    });
+
+                    if (i === currentPage) {
+                        pageButton.classList.add('btn-secondary');
+                    }
+
+                    paginationDiv.appendChild(pageButton);
+                }
+            }
+
+            // Sự kiện tìm kiếm
+            document.getElementById('searchButton').addEventListener('click', () => {
+                const searchTerm = document.getElementById('searchInput').value.trim();
+                fetchSubjects(searchTerm);
+            });
+
+            // Tìm kiếm khi nhấn Enter trong ô tìm kiếm
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('searchButton').click();
+                }
+            });
+
+            // Lấy và điền dữ liệu môn học khi tải trang
+            fetchSubjects();
+        });
+
+    </script>
+}
