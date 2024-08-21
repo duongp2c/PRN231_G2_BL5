@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using PRN231_API.DAO;
+using PRN231_API.Models;
 
 namespace PRN231_API.Controllers
 {
@@ -30,10 +31,7 @@ namespace PRN231_API.Controllers
             var subjects = await _subjectDAO.GetSubjectsByStudentIDAsync(accountId);
 
             // Kiểm tra xem danh sách môn học có rỗng hoặc không
-            if (subjects == null || !subjects.Any())
-            {
-                return NotFound(new { message = "No subjects found for this student." });
-            }
+            subjects = subjects ?? new List<Subject>();
 
             // Trả về kết quả với mã trạng thái 200 OK
             return Ok(subjects);

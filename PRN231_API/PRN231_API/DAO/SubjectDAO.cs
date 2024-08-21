@@ -53,7 +53,7 @@ namespace PRN231_API.DAO
 
             if (subjects == null)
             {
-                return new List<SubjectIsAndNameDTO>();
+                return null;
             }
             return subjects;
         }
