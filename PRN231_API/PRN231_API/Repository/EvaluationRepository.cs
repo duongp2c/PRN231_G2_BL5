@@ -28,7 +28,7 @@ namespace PRN231_API.Repository
         public async Task<List<Evaluation>> GetEvaluationBySubjectAndStudent(int subjectId, int studentId)
         {
             return await _context.Evaluations
-                .Where(e => e.SubjectId == subjectId && e.StudentId == studentId)
+                .Where(e => e.SubjectId == subjectId && e.StudentId == studentId).Include("GradeType")
                 .ToListAsync();
         }
 

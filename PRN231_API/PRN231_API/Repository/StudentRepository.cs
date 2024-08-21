@@ -22,9 +22,11 @@ namespace PRN231_API.Repository
 
         public async Task<List<StudentSubject>> GetStudentSubjectsAsync(int studentId)
         {
-            return await _context.StudentSubjects
-                .Where(ss => ss.StudentId == studentId)
+            List<StudentSubject> list = await _context.StudentSubjects
+                .Where(ss => ss.StudentId == studentId).Include("Subject")
                 .ToListAsync();
+            
+            return list;
         }
 
         public async Task AddStudentSubjectAsync(StudentSubject studentSubject)

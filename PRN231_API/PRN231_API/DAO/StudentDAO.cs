@@ -28,6 +28,21 @@ namespace PRN231_API.DAO
             };
             return profile;
         }
+        public async Task<List<SubjectDTO>> GetStudentSubjectAsync(int studentId)
+        {
+            List<StudentSubject> ss = await _studentRepository.GetStudentSubjectsAsync(studentId);
+            List<SubjectDTO> subjects = new List<SubjectDTO>();
+            foreach (var subject in ss) 
+            {
+                SubjectDTO s = new SubjectDTO
+                {
+                    Name = subject.Subject.SubjectName,
+                    SubjectId = subject.Subject.SubjectId
+                };
+                subjects.Add(s);
+            }
+            return subjects;
+        }
         public async Task<string> UpdateStudentDetailAsync(ProfileDTO profile , int id)
         {
             var student = await _studentRepository.GetStudentByIdAsync(id);//sua sau khi co session
