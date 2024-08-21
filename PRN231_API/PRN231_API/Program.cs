@@ -46,7 +46,7 @@ builder.Services.AddScoped<SubjectDAO>();
 
 builder.Services.AddScoped<EmailDAO>();
 builder.Services.AddScoped<JwtTokenService>();
-builder.Services.AddScoped<IAccountService, AccountDAO>();
+//builder.Services.AddScoped<IAccountService, AccountDAO>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 builder.Services.AddDistributedMemoryCache();

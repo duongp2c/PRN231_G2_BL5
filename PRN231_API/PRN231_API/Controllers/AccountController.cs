@@ -9,6 +9,7 @@ using PRN231_API.DAO;
 using PRN231_API.DTO;
 using PRN231_API.Models;
 using PRN231_API.Repository;
+using PRN231_API.ViewModel;
 
 namespace PRN231_API.Controllers
 {
@@ -21,7 +22,7 @@ namespace PRN231_API.Controllers
         private readonly SchoolDBContext _context;
         private readonly IAccountService _accountService;
 
-        public AccountController(AccountDAO accountDao, SchoolDBContext context,IAccountService accountService)
+        public AccountController(AccountDAO accountDao, SchoolDBContext context, IAccountService accountService)
         {
             _accountDao = accountDao;
             _context = context;
@@ -46,7 +47,7 @@ namespace PRN231_API.Controllers
             return Ok("Password reset successful.");
         }
 
-                [HttpGet]
+        [HttpGet]
         [Authorize]
         public async Task<ActionResult<Account>> StudentDetails()
         {
@@ -87,4 +88,5 @@ namespace PRN231_API.Controllers
                 return BadRequest();
             }
         }
+    }
 }

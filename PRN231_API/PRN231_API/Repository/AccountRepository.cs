@@ -11,13 +11,7 @@ using System;
 
 namespace PRN231_API.Repository
 {
-    public interface IAccountRepository
-    {
-        Task<CustomResponse> Register(Account user);
-        Task<Account> Login(AccountLoginDto user);
-        Task<Account> GetUserByUsernameAsync(string username);
-        Task<CustomResponse> ActiveAccount(ActiveViewModel activeModel);
-    }
+    
     public class AccountRepository : IAccountRepository
     {
         private readonly SchoolDBContext _context;

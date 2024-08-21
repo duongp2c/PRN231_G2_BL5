@@ -16,7 +16,7 @@ using static PRN231_API.DAO.AccountDAO;
 
 namespace PRN231_API.DAO
 {
-        public interface IAccountService : IAccountService
+        public interface IAccountService 
     {
         Task<CustomResponse> RegisterAccount(AccountRegisterDto userDto);
         Task<TokenModel> LoginAccount(AccountLoginDto userDto);
