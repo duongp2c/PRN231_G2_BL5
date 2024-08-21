@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Teacher</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Create Teacher</h1>
+        <form id="createTeacherForm" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label for="TeacherName" class="form-label">Teacher Name</label>
+                <input type="text" class="form-control" id="TeacherName" name="TeacherName" required />
+                <div class="invalid-feedback">
+                    Please provide a teacher name.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="Email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="Email" name="Email" required />
+                <div class="invalid-feedback">
+                    Please provide a valid email.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="Password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="Password" name="Password" required />
+                <div class="invalid-feedback">
+                    Please provide a password.
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Teacher</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Bootstrap form validation
+            (function () {
+                'use strict';
+                var forms = document.querySelectorAll('.needs-validation');
+                Array.prototype.slice.call(forms).forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            })();
+
+            $('#createTeacherForm').on('submit', function (event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                var formData = {
+                    TeacherName: $('#TeacherName').val(),
+                    Email: $('#Email').val(),
+                    Password: $('#Password').val(),
+                    IsActive: true // Assuming the teacher is active by default
+                };
+
+                $.ajax({
+                    url: 'http://localhost:5231/api/ManageTeacher/CreateTeacher',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function (response) {
+                        alert('Teacher created successfully!');
+                        // Optionally, redirect or clear the form
+                        $('#createTeacherForm')[0].reset();
+                        $('.was-validated').removeClass('was-validated'); // Reset Bootstrap validation
+                        window.location.href = '/ManageTeacher/Index';
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error creating teacher: ' + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

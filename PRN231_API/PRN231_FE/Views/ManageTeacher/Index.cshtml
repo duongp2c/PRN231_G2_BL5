@@ -1,0 +1,233 @@
+﻿@{
+    ViewData["Title"] = "List of Teachers";
+    var searchName = ViewData["SearchName"] as string;
+}
+
+<section class="product-page spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="d-flex text-black">
+                    <div class="p-2">
+                        <h3>Teachers List</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="my-3">
+                 <form action="/ManageTeacher/CreateTeacher" method="get" class="update-status-form">
+                    <button type="submit" id="searchButton" class="btn btn-outline-primary ml-2">Add</button>
+                     </form>
+            </div>
+            <div class="my-3">
+                <form id="searchForm" class="form-inline">
+                    <div class="input-group">
+                        <input type="text" id="searchName" name="searchName" class="form-control" placeholder="Search by name" value="@searchName" />
+                        <div class="input-group-append">
+                            <button type="submit" id="searchButton" class="btn btn-outline-primary ml-2">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <table id="teacherTable" class="table table-striped table-bordered table-white text-dark">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Subjects</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be dynamically populated here -->
+                </tbody>
+            </table>
+            <nav aria-label="Page navigation">
+                <ul id="pagination" class="pagination justify-content-center"></ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const apiUrl = 'http://localhost:5231/api/ManageTeacher';
+            const rowsPerPage = 5;
+            let currentPage = 1;
+            let teachers = [];
+            let filteredTeachers = [];
+
+            async function fetchTeachers() {
+                try {
+                    const response = await fetch(`${apiUrl}/GetAllTeachers`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    teachers = await response.json();
+                    filteredTeachers = teachers;
+                    renderTable();
+                    renderPagination();
+                } catch (error) {
+                    console.error('Error fetching teachers:', error);
+                }
+            }
+
+            function renderTable() {
+                const tableBody = document.querySelector('#teacherTable tbody');
+                tableBody.innerHTML = '';
+
+                const start = (currentPage - 1) * rowsPerPage;
+                const end = start + rowsPerPage;
+                const paginatedTeachers = filteredTeachers.slice(start, end);
+
+                if (paginatedTeachers.length > 0) {
+                    paginatedTeachers.forEach(teacher => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                                            <td width="50">${teacher.teacherId}</td>
+                                            <td>${teacher.teacherName}</td>
+                                            <td>${teacher.email}</td>
+                                            <td>
+                                                ${teacher.subjects.map(subject => `<p>${subject.subjectName}</p>`).join('')}
+                                            </td>
+                                            <td>
+                                                <form action="/ManageTeacher/UpdateTeacherStatus" method="post" class="update-status-form">
+                                                    <input type="hidden" name="id" value="${teacher.teacherId}" />
+                                                    <select name="isActive" class="form-control">
+                                                        ${teacher.isActive ?
+                                '<option value="true" selected>Active</option><option value="false">Inactive</option>' :
+                                '<option value="true">Active</option><option value="false" selected>Inactive</option>'}
+                                                    </select>
+                                                </form>
+                                            </td>
+                                            <td width="100">
+                                                        <form method="post" action="/ManageTeacher/DeleteTeacher?id=${teacher.teacherId}" class="delete-form" onsubmit="return confirmDelete();">
+                                                            <input type="hidden" name="id" value="${teacher.teacherId}" />
+                                                              <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                              <span class="icon_trash"></span> Delete
+                                                             </button>
+                                                        </form>
+
+                                            </td>
+                                        `;
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    tableBody.innerHTML = '<tr><td colspan="6">No teachers found.</td></tr>';
+                }
+            }
+
+            function renderPagination() {
+                const paginationDiv = document.getElementById('pagination');
+                paginationDiv.innerHTML = '';
+
+                const totalPages = Math.ceil(filteredTeachers.length / rowsPerPage);
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageButton = document.createElement('button');
+                    pageButton.textContent = i;
+                    pageButton.className = 'btn btn-primary mx-1';
+                    pageButton.addEventListener('click', () => {
+                        currentPage = i;
+                        renderTable();
+                    });
+
+                    if (i === currentPage) {
+                        pageButton.classList.add('btn-secondary');
+                    }
+
+                    paginationDiv.appendChild(pageButton);
+                }
+            }
+
+            document.getElementById('searchForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const searchName = document.getElementById('searchName').value.trim().toLowerCase();
+                filteredTeachers = teachers.filter(teacher => teacher.teacherName.toLowerCase().includes(searchName));
+                currentPage = 1; // Reset to page 1 on new search
+                renderTable();
+                renderPagination();
+            });
+
+            document.addEventListener('change', async function (e) {
+                if (e.target.matches('.update-status-form select')) {
+                    const form = e.target.closest('.update-status-form');
+                    const id = form.querySelector('input[name="id"]').value;
+                    const isActive = e.target.value === 'true';
+
+                    try {
+                        const response = await fetch(`/ManageTeacher/UpdateTeacherStatus`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: new URLSearchParams({
+                                id: id,
+                                isActive: isActive
+                            })
+                        });
+
+                        if (response.ok) {
+                            fetchTeachers(); // Refresh the teacher list
+                        } else {
+                            console.error('Failed to update teacher status.');
+                        }
+                    } catch (error) {
+                        console.error('Error updating teacher status:', error);
+                    }
+                }
+            });
+
+            document.addEventListener('submit', async function (e) {
+                if (e.target.matches('.delete-form')) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to delete this teacher?')) {
+                        const form = e.target;
+                        const id = form.querySelector('input[name="id"]').value;
+
+                        try {
+                            const response = await fetch(`/ManageTeacher/DeleteTeacher`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: new URLSearchParams({ id: id })
+                            });
+
+                            if (response.ok) {
+                                alert('Teacher deleted successfully.');
+                                await fetchTeachers(); // Refresh the teacher list only if the deletion succeeds
+                                window.location.reload();
+                            } else {
+                                console.error('Failed to delete teacher.');
+                                alert('Failed to delete teacher. Please try again.');
+                            }
+                        } catch (error) {
+                            console.error('Error deleting teacher:', error);
+                        }
+                    }
+                }
+            });
+
+            fetchTeachers(); // Initial fetch
+        });
+
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete this teacher?');
+        }
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                alert('@TempData["SuccessMessage"]');
+            </text>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>
+                alert('@TempData["ErrorMessage"]');
+            </text>
+        }
+    </script>
+}
