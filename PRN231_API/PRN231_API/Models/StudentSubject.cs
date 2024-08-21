@@ -7,7 +7,7 @@ namespace PRN231_API.Models
     {
         public int StudentId { get; set; }
         public int SubjectId { get; set; }
-        public bool? IsComplete { get; set; }
+        public bool IsComplete { get; set; }
 
         public virtual Student Student { get; set; } = null!;
         public virtual Subject Subject { get; set; } = null!;

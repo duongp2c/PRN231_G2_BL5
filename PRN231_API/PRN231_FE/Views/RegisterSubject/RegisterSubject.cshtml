@@ -1,23 +1,56 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<PRN231_FE.Models.SubjectViewModel>
+
 @{
+    ViewData["Title"] = "RegisterSubject";
+    var subjectOfAccount = ViewBag.SubjectOfAccount as List<PRN231_FE.Models.SubjectOfAccount>;
 }
+
+<h1>RegisterSubject</h1>
+
 <div class="container pt-5">
     <div class="row">
         <div class="col-md-6">
             <h2>Tất cả các môn học</h2>
-            <form action="/register-subject" method="post">
+            <form asp-action="Create" method="post">
                 <div class="form-group">
-                    <input hidden type="text" name="StudentId" value="StudentId">
                     <label for="subjectName">Chọn môn học để đăng kí:</label>
+
+                    <!-- Hidden field to store AccountId -->
+                    <input type="text" name="accountId" value="@ViewBag.AccountId" hidden />
+
                     <select id="subjectName" name="subjectId" class="form-control">
-                        <!-- Options will be dynamically populated here -->
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var subject in Model)
+                            {
+                                <option value="@subject.subjectId">@subject.subjectName</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="">No subjects available</option>
+                        }
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary mt-2">Register</button>
             </form>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mt-3">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger mt-3">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
         </div>
+
+        <!-- Existing code for displaying subjects and other content -->
+
 
         <div class="col-md-6">
             <h2>Các môn đang theo học</h2>
@@ -30,22 +63,24 @@
                     </tr>
                 </thead>
                 <tbody class="text-center">
-                    <tr>
-                        <td>Mathematics</td>
-                        <td>abc</td>
-                        <td>Active</td>
-                    </tr>
-                    <tr>
-                        <td>Mathematics</td>
-                        <td>abc</td>
-                        <td>Inactive</td>
-                    </tr>
-                    <tr>
-                        <td>Mathematics</td>
-                        <td>abc</td>
-                        <td>Active</td>
-                    </tr>
-                    <!-- Add more rows as needed -->
+                    @if (subjectOfAccount != null && subjectOfAccount.Any())
+                    {
+                        foreach (var subject in subjectOfAccount)
+                        {
+                            <tr>
+                                <td>@subject.subjectName</td>
+                                <td>@subject.teacherName</td>
+                                <td>@subject.isComplete</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3">Không có môn học nào</td>
+                        </tr>
+                    }
+                    
                 </tbody>
             </table>
         </div>
@@ -74,45 +109,7 @@
 </div>
 
 @section Scripts {
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // URL of your API endpoint
-            const apiUrl = 'http://localhost:5000/api/Subject';
 
-            // Function to fetch subjects and populate the dropdown
-            async function fetchSubjects() {
-                try {
-                    const response = await fetch(apiUrl);
-                    const subjects = await response.json();
-
-                    // Get the select element
-                    const subjectSelect = document.getElementById('subjectName');
-
-                    // Clear existing options
-                    subjectSelect.innerHTML = '';
-
-                    // Add a default option
-                    const defaultOption = document.createElement('option');
-                    defaultOption.text = 'Chọn môn học';
-                    defaultOption.value = '';
-                    subjectSelect.add(defaultOption);
-
-                    // Populate options with subjects from the API
-                    subjects.forEach(subject => {
-                        const option = document.createElement('option');
-                        option.value = subject.subjectId; // Use the actual property name for ID
-                        option.text = subject.subjectName; // Use the actual property name for name
-                        subjectSelect.add(option);
-                    });
-                } catch (error) {
-                    console.error('Error fetching subjects:', error);
-                }
-            }
-
-            // Fetch and populate subjects on page load
-            fetchSubjects();
-        });
-    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const apiUrl = 'http://localhost:5000/api/Subject/subjecttwofields';

@@ -15,11 +15,11 @@ namespace PRN231_API.Controllers
             _studentDao = studentDao;
         }
         [Authorize("Student")]
-        [HttpPost("register/{subjectId}")]
-        public async Task<IActionResult> RegisterSubject(int subjectId)
+        [HttpPost("register/{accountId}/{subjectId}")]
+        public async Task<IActionResult> RegisterSubject(int subjectId, int accountId)
         {
             // Gọi phương thức RegisterSubjectAsync và truyền HttpContext
-            var result = await _studentDao.RegisterSubjectAsync(subjectId, HttpContext);
+            var result = await _studentDao.RegisterSubjectAsync(subjectId, accountId);
 
             // Kiểm tra kết quả và trả về phản hồi phù hợp
             if (result == "Subject registered successfully.")

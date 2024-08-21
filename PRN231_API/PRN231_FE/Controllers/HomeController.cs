@@ -6,7 +6,12 @@ namespace PRN231_FE.Controllers
     {
         public IActionResult Index()
         {
+            var accountId = HttpContext.Session.GetString("AccountId");
+            Console.WriteLine(accountId);
+
             return View("Views/Home/Index1.cshtml");
         }
+       
+
     }
 }

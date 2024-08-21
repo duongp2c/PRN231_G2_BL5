@@ -13,10 +13,10 @@ namespace PRN231_API.DAO
             _studentRepository = studentRepository;
            
         }
-        public async Task<string> RegisterSubjectAsync(int subjectId, HttpContext httpContext)
+        public async Task<string> RegisterSubjectAsync(int subjectId, int accountId)
         {
             // Lấy AccountId từ session
-            var accountId = httpContext.Session.GetInt32("AccountId");
+            
 
             if (accountId == null)
             {
@@ -24,7 +24,7 @@ namespace PRN231_API.DAO
             }
 
             // Lấy studentId dựa trên AccountId
-            var studentId = await _studentRepository.GetStudentIdByAccountIdAsync(accountId.Value);
+            var studentId = await _studentRepository.GetStudentIdByAccountIdAsync(accountId);
 
             if (studentId == null)
             {

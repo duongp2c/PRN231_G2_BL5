@@ -68,7 +68,7 @@ namespace PRN231_FE.Controllers
                     var handler = new JwtSecurityTokenHandler();
                     var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
                     var accountId = jsonToken.Claims.First(claim => claim.Type == "UserID").Value;
-
+                    HttpContext.Session.SetString("AuthToken", token);
                     // Save the AccountId to the session
                     HttpContext.Session.SetString("AccountId", accountId);
                     // Store the token in a cookie or session

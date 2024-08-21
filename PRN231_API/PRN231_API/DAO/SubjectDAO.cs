@@ -26,15 +26,19 @@ namespace PRN231_API.DAO
             }
             return subjects;
         }
-        public IEnumerable<object> GetSubjectsByStudentID(int studentId)
+        public async Task<IEnumerable<object>> GetSubjectsByStudentIDAsync(int accountId)
         {
-            var obj = _subjectRepository.GetSubjectsByStudentID(studentId);
-            if(obj == null)
+            // Gọi phương thức bất đồng bộ để lấy danh sách môn học
+            var obj = await _subjectRepository.GetSubjectsByStudentIDAsync(accountId);
+
+            // Nếu không tìm thấy dữ liệu, trả về danh sách rỗng
+            if (obj == null)
             {
                 return new List<object>();
             }
-            return obj;
 
+            // Trả về danh sách môn học
+            return obj;
         }
         public IEnumerable<SubjectDTO> GetAllSubjects2Field()
         {
@@ -42,5 +46,16 @@ namespace PRN231_API.DAO
             return result;
         }
 
+        public IEnumerable<SubjectIsAndNameDTO> GetAllSubjectsIdAndName()
+        {
+            // Gọi phương thức GetAllSubjects từ ISubjectRepository
+            var subjects = _subjectRepository.GetAllSubjectsIDandName();
+
+            if (subjects == null)
+            {
+                return new List<SubjectIsAndNameDTO>();
+            }
+            return subjects;
+        }
     }
 }

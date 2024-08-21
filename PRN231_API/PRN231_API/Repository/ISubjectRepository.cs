@@ -6,7 +6,9 @@ namespace PRN231_API.Repository
     public interface ISubjectRepository
     {
         IEnumerable<Subject> GetAllSubjects();
-        IEnumerable<object> GetSubjectsByStudentID(int studentId);
+        Task<IEnumerable<object>> GetSubjectsByStudentIDAsync(int accountId);
+        Task<int?> GetStudentIdByAccountIdAsync(int accountId);
         IEnumerable<SubjectDTO> GetAllSubjects2Field();
+        IEnumerable<SubjectIsAndNameDTO> GetAllSubjectsIDandName();
     }
 }

@@ -23,14 +23,19 @@ namespace PRN231_API.Controllers
             return Ok(subjects);
         }
         [Authorize("Student")]
-        [HttpGet("student/{studentId}")]
-        public IActionResult GetSubjectsByStudentID(int studentId)
+        [HttpGet("student/{accountId}")]
+        public async Task<IActionResult> GetSubjectsByStudentID(int accountId)
         {
-            var subjects = _subjectDAO.GetSubjectsByStudentID(studentId);
+            // Gọi phương thức bất đồng bộ để lấy danh sách môn học
+            var subjects = await _subjectDAO.GetSubjectsByStudentIDAsync(accountId);
+
+            // Kiểm tra xem danh sách môn học có rỗng hoặc không
             if (subjects == null || !subjects.Any())
             {
                 return NotFound(new { message = "No subjects found for this student." });
             }
+
+            // Trả về kết quả với mã trạng thái 200 OK
             return Ok(subjects);
         }
         [EnableQuery]
@@ -39,6 +44,12 @@ namespace PRN231_API.Controllers
         {
             var subjects = _subjectDAO.GetAllSubjects2Field().AsQueryable();
             return Ok(subjects);
+        }
+        [HttpGet("GetSubjectIdAndName")]
+        public IActionResult GetSubjectIdAndName()
+        {
+            var subject = _subjectDAO.GetAllSubjectsIdAndName();
+            return Ok(subject);
         }
     }
 }
