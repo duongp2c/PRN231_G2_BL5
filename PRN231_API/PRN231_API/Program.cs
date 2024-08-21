@@ -6,6 +6,7 @@ using PRN231_API.DAO;
 using PRN231_API.Models;
 using PRN231_API.Repository;
 using StackExchange.Redis;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -94,6 +95,13 @@ builder.Services.AddAuthentication(x =>
         ValidateIssuer = true,
         ValidateAudience = true
     };
+});
+
+builder.Services.AddAuthorization(x =>
+{
+    x.AddPolicy("Student", policy => policy.RequireClaim(ClaimTypes.Role, "Student"));
+    x.AddPolicy("Teacher", policy => policy.RequireClaim(ClaimTypes.Role, "Teacher"));
+    x.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
 });
 
 var app = builder.Build();
