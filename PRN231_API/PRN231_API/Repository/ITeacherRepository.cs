@@ -11,7 +11,7 @@ namespace PRN231_API.Repository
         Task<int> AddAccountAsync(Account account);
         Task<bool> EditActiveTeacherAsync(int teacherId, bool isActive);
        
-        Task<bool> DeleteTeacherAsync(int teacherId);
+        Task<string> DeleteTeacherAsync(int teacherId);
         Task<TeacherDTO?> GetTeacherByIdAsync(int teacherId);
         Task<List<TeacherDTO>> GetAllTeachersAsync();
         Task<TeacherDTO> CreateTeacherAsync(CreateTeacherDTO createTeacherDTO);

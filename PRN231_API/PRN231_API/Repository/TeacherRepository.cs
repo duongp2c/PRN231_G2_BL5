@@ -35,15 +35,19 @@ namespace PRN231_API.Repository
 
 
 
-        public async Task<bool> DeleteTeacherAsync(int teacherId)
+        public async Task<string> DeleteTeacherAsync(int teacherId)
         {
             var teacher = await _context.Teachers
                 .Include(t => t.Subjects)
-                .Include(t => t.Account) // Include the account to delete it
+                .Include(t => t.Account) // Include the account to check its status
                 .FirstOrDefaultAsync(t => t.TeacherId == teacherId);
 
             if (teacher == null)
-                return false;
+                return "Teacher not found"; // Teacher does not exist
+
+            // Check if the associated account is active
+            if (teacher.Account == null || teacher.Account.IsActive)
+                return "Cannot delete. Teacher is active."; // Cannot delete if account is active or does not exist
 
             // Remove teacher from subjects
             foreach (var subject in teacher.Subjects)
@@ -52,11 +56,8 @@ namespace PRN231_API.Repository
                 _context.Subjects.Update(subject);
             }
 
-            // Remove the associated account if it exists
-            if (teacher.Account != null)
-            {
-                _context.Accounts.Remove(teacher.Account);
-            }
+            // Remove the associated account
+            _context.Accounts.Remove(teacher.Account);
 
             // Remove the teacher
             _context.Teachers.Remove(teacher);
@@ -64,8 +65,11 @@ namespace PRN231_API.Repository
             // Save changes to the database
             await _context.SaveChangesAsync();
 
-            return true;
+            return "Teacher successfully deleted.";
         }
+
+
+
 
 
         public async Task<TeacherDTO?> GetTeacherByIdAsync(int teacherId)

@@ -7,13 +7,13 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="d-flex text-white">
+                <div class="d-flex text-black">
                     <div class="p-2">
                         <h3>Students List</h3>
                     </div>
                 </div>
             </div>
-          
+
 
             <div class="my-3">
                 <form id="searchForm" class="form-inline">
@@ -88,34 +88,38 @@
                     paginatedStudents.forEach(student => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td width="50">${student.studentId}</td>
-                            <td>${student.name}</td>
-                            <td>${student.age}</td>
-                            <td>${student.address}</td>
-                            <td>${student.phone}</td>
-                            <td>${student.email}</td>
-                            <td>
-                                <img src="${student.image}" alt="Student Image" style="max-width: 100px;" />
-                            </td>
-                            <td>
-                                <form action="/ManageStudent/UpdateStudentStatus" method="post">
-                                    <input type="hidden" name="id" value="${student.studentId}" />
-                                    <select name="isActive" onchange="this.form.submit()" class="form-control">
-                                        ${student.isActive ?
+                                    <td width="50">${student.studentId}</td>
+                                    <td>${student.name}</td>
+                                    <td>${student.age}</td>
+                                    <td>${student.address}</td>
+                                    <td>${student.phone}</td>
+                                    <td>${student.email}</td>
+                                    <td>
+                                        <img src="${student.image}" alt="Student Image" style="max-width: 100px;" />
+                                    </td>
+                                    <td>
+                                        <form action="/ManageStudent/UpdateStudentStatus" method="post">
+                                            <input type="hidden" name="id" value="${student.studentId}" />
+                                            <select name="isActive" onchange="this.form.submit()" class="form-control">
+                                                ${student.isActive ?
                                 '<option value="true" selected>Active</option><option value="false">Inactive</option>' :
                                 '<option value="true">Active</option><option value="false" selected>Inactive</option>'}
-                                    </select>
-                                </form>
-                            </td>
-                            <td>
-                                ${student.subjects.map(subject => `<p>${subject.subjectName}</p>`).join('')}
-                            </td>
-                            <td width="100">
+                                            </select>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        ${student.subjects.map(subject => `<p>${subject.subjectName}</p>`).join('')}
+                                    </td>
+                                    <td width="100">
+                                       ${student.isActive ? `
+                                <button class="btn btn-outline-danger btn-sm delete-student" data-id="${student.studentId}" disabled>
+                                    <span class="icon_trash"></span> Delete
+                                </button>` : `
                                 <button class="btn btn-outline-danger btn-sm delete-student" data-id="${student.studentId}">
                                     <span class="icon_trash"></span> Delete
-                                </button>
-                            </td>
-                        `;
+                                </button>`}
+                                    </td>
+                                `;
                         tableBody.appendChild(row);
                     });
                 } else {
@@ -155,6 +159,26 @@
                 renderPagination();
             });
 
+
+            async function deleteStudent(studentId) {
+                try {
+                    const response = await fetch(`/ManageStudent/DeleteStudent?id=${studentId}`, { method: 'POST' });
+                    if (response.ok) {
+                        // Display success message
+                        alert('Student deleted successfully.');
+
+                        // Reload the page to refresh the list
+                        window.location.reload();
+                    } else {
+                        alert('Failed to delete the student.');
+                    }
+                } catch (error) {
+                    console.error('Error deleting student:', error);
+                    alert('Error deleting student. Please try again.');
+                }
+            }
+
+
             document.addEventListener('click', function (e) {
                 if (e.target.matches('.delete-student')) {
                     const studentId = e.target.getAttribute('data-id');
@@ -164,35 +188,8 @@
                 }
             });
 
-            async function deleteStudent(studentId) {
-                try {
-                    const response = await fetch(`/ManageStudent/DeleteStudent?id=${studentId}`, { method: 'POST' });
-                    if (response.ok) {
-                        // Remove the deleted student from the list
-                        filteredStudents = filteredStudents.filter(student => student.studentId !== studentId);
-                        students = students.filter(student => student.studentId !== studentId);
-
-                        // Check if the current page has no students left and adjust the current page if necessary
-                        const start = (currentPage - 1) * rowsPerPage;
-                        const paginatedStudents = filteredStudents.slice(start, start + rowsPerPage);
-
-                        if (paginatedStudents.length === 0 && currentPage > 1) {
-                            currentPage--; // Move to the previous page if the current one is empty
-                        }
-
-                        renderTable();
-                        renderPagination();
-                    } else {
-                        alert('Failed to delete the student.');
-                    }
-                } catch (error) {
-                    console.error('Error deleting student:', error);
-                }
-            }
-
-            fetchStudents(); // Initial fetch
+            fetchStudents();
         });
 
     </script>
 }
-    

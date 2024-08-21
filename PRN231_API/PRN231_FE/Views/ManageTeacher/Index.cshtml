@@ -87,32 +87,31 @@
                     paginatedTeachers.forEach(teacher => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                                            <td width="50">${teacher.teacherId}</td>
-                                            <td>${teacher.teacherName}</td>
-                                            <td>${teacher.email}</td>
-                                            <td>
-                                                ${teacher.subjects.map(subject => `<p>${subject.subjectName}</p>`).join('')}
-                                            </td>
-                                            <td>
-                                                <form action="/ManageTeacher/UpdateTeacherStatus" method="post" class="update-status-form">
-                                                    <input type="hidden" name="id" value="${teacher.teacherId}" />
-                                                    <select name="isActive" class="form-control">
-                                                        ${teacher.isActive ?
+                                    <td width="50">${teacher.teacherId}</td>
+                                    <td>${teacher.teacherName}</td>
+                                    <td>${teacher.email}</td>
+                                    <td>
+                                        ${teacher.subjects.map(subject => `<p>${subject.subjectName}</p>`).join('')}
+                                    </td>
+                                    <td>
+                                        <form action="/ManageTeacher/UpdateTeacherStatus" method="post" class="update-status-form">
+                                            <input type="hidden" name="id" value="${teacher.teacherId}" />
+                                            <select name="isActive" class="form-control">
+                                                ${teacher.isActive ?
                                 '<option value="true" selected>Active</option><option value="false">Inactive</option>' :
                                 '<option value="true">Active</option><option value="false" selected>Inactive</option>'}
-                                                    </select>
-                                                </form>
-                                            </td>
-                                            <td width="100">
-                                                        <form method="post" action="/ManageTeacher/DeleteTeacher?id=${teacher.teacherId}" class="delete-form" onsubmit="return confirmDelete();">
-                                                            <input type="hidden" name="id" value="${teacher.teacherId}" />
-                                                              <button type="submit" class="btn btn-outline-danger btn-sm">
-                                                              <span class="icon_trash"></span> Delete
-                                                             </button>
-                                                        </form>
-
-                                            </td>
-                                        `;
+                                            </select>
+                                        </form>
+                                    </td>
+                                    <td width="100">
+                                        <form method="post" action="/ManageTeacher/DeleteTeacher?id=${teacher.teacherId}" class="delete-form" onsubmit="return confirmDelete();">
+                                            <input type="hidden" name="id" value="${teacher.teacherId}" />
+                                            <button type="submit" class="btn btn-outline-danger btn-sm ${teacher.isActive ? 'disabled' : ''}" ${teacher.isActive ? 'disabled' : ''}>
+                                                <span class="icon_trash"></span> Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                `;
                         tableBody.appendChild(row);
                     });
                 } else {

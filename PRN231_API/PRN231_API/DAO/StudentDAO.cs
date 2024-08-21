@@ -57,7 +57,7 @@ namespace PRN231_API.DAO
             // Trả về danh sách sinh viên bao gồm chi tiết và môn học
             return students;
         }
-        public async Task<bool> DeleteStudentAsync(int studentId)
+        public async Task<string> DeleteStudentAsync(int studentId)
         {
             return await _studentRepository.DeleteStudentAsync(studentId);
         }

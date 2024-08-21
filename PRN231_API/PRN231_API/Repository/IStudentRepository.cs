@@ -10,7 +10,7 @@ namespace PRN231_API.Repository
         Task<List<StudentSubject>> GetStudentSubjectsAsync(int studentId);
         Task AddStudentSubjectAsync(StudentSubject studentSubject);
         Task<bool> EditActiveStudentAsync(int studentId, bool isActive);
-        Task<bool> DeleteStudentAsync(int studentId);
+        Task<string> DeleteStudentAsync(int studentId);
         Task<List<StudentDTO>> SearchStudentsByNameAsync(string name);
     }
 }

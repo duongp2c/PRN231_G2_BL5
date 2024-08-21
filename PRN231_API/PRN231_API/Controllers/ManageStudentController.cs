@@ -36,15 +36,28 @@ namespace PRN231_API.Controllers
 
             return Ok(students);
         }
-        [HttpDelete("{studentId}")]
-        public async Task<IActionResult> DeleteStudent(int studentId)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStudent(int id)
         {
-            var result = await _studentDao.DeleteStudentAsync(studentId);
-            if (result)
-                return Ok("Student deleted successfully.");
-            else
-                return NotFound("Student not found.");
+            var result = await _studentDao.DeleteStudentAsync(id);
+
+            if (result == "Student successfully deleted.")
+            {
+                return Ok(result); // Trả về thông báo thành công với HTTP 200 OK
+            }
+            else if (result == "Student not found")
+            {
+                return NotFound(result); // Trả về thông báo không tìm thấy với HTTP 404 Not Found
+            }
+            else if (result == "Cannot delete. Student is active.")
+            {
+                return Conflict(result); // Trả về thông báo xung đột với HTTP 409 Conflict
+            }
+
+            // Mặc định trả về lỗi server trong các trường hợp bất ngờ
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
         }
+
         [HttpPut("{studentId}/status")]
         public async Task<IActionResult> EditIsActiveStudent(int studentId, [FromQuery] bool isActive)
         {

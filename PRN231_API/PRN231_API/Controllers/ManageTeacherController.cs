@@ -67,15 +67,24 @@ namespace PRN231_API.Controllers
         public async Task<IActionResult> DeleteTeacher(int id)
         {
             var result = await _teacherDAO.DeleteTeacherAsync(id);
-            if (result)
+
+            if (result == "Teacher successfully deleted.")
             {
-                return Ok("Teacher deleted successfully.");
+                return Ok(result); // Return a success message with HTTP 200 OK
             }
-            else
+            else if (result == "Teacher not found")
             {
-                return NotFound( "Teacher Not Found" );
+                return NotFound(result); // Return a not found message with HTTP 404 Not Found
             }
+            else if (result == "Cannot delete. Teacher is active.")
+            {
+                return Conflict(result); // Return a conflict message with HTTP 409 Conflict
+            }
+
+            // Default to internal server error for unexpected cases
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
         }
+
         [HttpGet("search")]
         public async Task<IActionResult> SearchTeachersByNameAsync([FromQuery] string name)
         {

@@ -41,7 +41,7 @@ namespace PRN231_API.DAO
         }
 
 
-        public async Task<bool> DeleteTeacherAsync(int teacherId)
+        public async Task<string> DeleteTeacherAsync(int teacherId)
         {
             return await _teacherRepository.DeleteTeacherAsync(teacherId);
         }

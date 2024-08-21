@@ -49,20 +49,21 @@ namespace PRN231_API.Repository
             return _mapper.Map<List<StudentDTO>>(students);
         }
 
-        public async Task<bool> DeleteStudentAsync(int studentId)
+        public async Task<string> DeleteStudentAsync(int studentId)
         {
-            // Find the student along with related entities
             var student = await _context.Students
                 .Include(s => s.StudentDetail)
                 .Include(s => s.StudentSubjects)
                     .ThenInclude(ss => ss.Subject)
-                .Include(s => s.Account)
+                .Include(s => s.Account) // Include the account to check its status
                 .FirstOrDefaultAsync(s => s.StudentId == studentId);
 
             if (student == null)
-            {
-                return false; // Student does not exist
-            }
+                return "Student not found"; // Student does not exist
+
+            // Check if the associated account is active
+            if (student.Account == null || student.Account.IsActive)
+                return "Cannot delete. Student is active."; // Cannot delete if account is active or does not exist
 
             // Remove related entities if they exist
             if (student.StudentSubjects != null && student.StudentSubjects.Any())
@@ -84,8 +85,10 @@ namespace PRN231_API.Repository
 
             // Save changes and return result
             await _context.SaveChangesAsync();
-            return true;
+            return "Student successfully deleted.";
         }
+
+
 
         public async Task<bool> EditActiveStudentAsync(int studentId, bool isActive)
         {
