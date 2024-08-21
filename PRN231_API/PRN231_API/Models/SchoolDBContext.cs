@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -7,7 +7,7 @@ namespace PRN231_API.Models
 {
     public partial class SchoolDBContext : DbContext
     {
-        public SchoolDBContext()
+         public SchoolDBContext()
         {
         }
 
@@ -27,11 +27,8 @@ namespace PRN231_API.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=SchoolDB;Encrypt=True;Trusted_Connection=True;TrustServerCertificate=True;");
-            }
+
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -42,11 +39,17 @@ namespace PRN231_API.Models
 
                 entity.Property(e => e.ActiveCode).HasMaxLength(100);
 
-                entity.Property(e => e.Email).HasMaxLength(100);
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasMaxLength(100);
 
-                entity.Property(e => e.Password).HasMaxLength(100);
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasMaxLength(100);
 
-                entity.Property(e => e.Type).HasMaxLength(10);
+                entity.Property(e => e.Type)
+                    .IsRequired()
+                    .HasMaxLength(10);
             });
 
             modelBuilder.Entity<Evaluation>(entity =>
@@ -67,6 +70,7 @@ namespace PRN231_API.Models
                     .HasForeignKey(d => d.StudentId)
                     .HasConstraintName("FK__Evaluatio__Stude__3B75D760");
 
+
                 entity.HasOne(d => d.Subject)
                     .WithMany(p => p.Evaluations)
                     .HasForeignKey(d => d.SubjectId)
@@ -76,8 +80,9 @@ namespace PRN231_API.Models
             modelBuilder.Entity<GradeType>(entity =>
             {
                 entity.ToTable("GradeType");
-
-                entity.Property(e => e.GradeTypeName).HasMaxLength(100);
+                entity.Property(e => e.GradeTypeName)
+                    .IsRequired()
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.GradeTypeWeight).HasColumnType("decimal(5, 2)");
             });
@@ -85,11 +90,12 @@ namespace PRN231_API.Models
             modelBuilder.Entity<Student>(entity =>
             {
                 entity.ToTable("Student");
-
-                entity.HasIndex(e => e.AccountId, "UQ__Student__349DA5A7CF582E35")
+                entity.HasIndex(e => e.AccountId, "UQ__Student__349DA5A757481177")
                     .IsUnique();
 
-                entity.Property(e => e.Name).HasMaxLength(100);
+                entity.Property(e => e.Name)
+                    
+                    .HasMaxLength(100);
 
                 entity.HasOne(d => d.Account)
                     .WithOne(p => p.Student)
@@ -100,9 +106,9 @@ namespace PRN231_API.Models
             modelBuilder.Entity<StudentDetail>(entity =>
             {
                 entity.HasKey(e => e.StudentDetailsId)
-                    .HasName("PK__StudentD__3963A24F58FF4138");
+                    .HasName("PK__StudentD__3963A24F011D4767");
 
-                entity.HasIndex(e => e.StudentId, "UQ__StudentD__32C52B98FE45146C")
+                entity.HasIndex(e => e.StudentId, "UQ__StudentD__32C52B98F9EF5F75")
                     .IsUnique();
 
                 entity.Property(e => e.AdditionalInformation).HasMaxLength(255);
@@ -122,7 +128,7 @@ namespace PRN231_API.Models
             modelBuilder.Entity<StudentSubject>(entity =>
             {
                 entity.HasKey(e => new { e.StudentId, e.SubjectId })
-                    .HasName("PK__StudentS__A80491A3791B414A");
+                    .HasName("PK__StudentS__A80491A36F94AA95");
 
                 entity.ToTable("StudentSubject");
 
@@ -142,20 +148,20 @@ namespace PRN231_API.Models
             modelBuilder.Entity<Subject>(entity =>
             {
                 entity.ToTable("Subject");
-
-                entity.Property(e => e.SubjectName).HasMaxLength(100);
+                entity.Property(e => e.SubjectName)
+                    .IsRequired()
+                    .HasMaxLength(100);
 
                 entity.HasOne(d => d.Teacher)
                     .WithMany(p => p.Subjects)
                     .HasForeignKey(d => d.TeacherId)
-                    .HasConstraintName("FK__Subject__Teacher__32E0915F");
+                    .HasConstraintName("FK__Subject__Teacher__3B75D760");
             });
 
             modelBuilder.Entity<Teacher>(entity =>
             {
                 entity.ToTable("Teacher");
-
-                entity.HasIndex(e => e.AccountId, "UQ__Teacher__349DA5A75D7E78CF")
+                entity.HasIndex(e => e.AccountId, "UQ__Teacher__349DA5A762308E4C")
                     .IsUnique();
 
                 entity.Property(e => e.TeacherName).HasMaxLength(100);
@@ -163,7 +169,7 @@ namespace PRN231_API.Models
                 entity.HasOne(d => d.Account)
                     .WithOne(p => p.Teacher)
                     .HasForeignKey<Teacher>(d => d.AccountId)
-                    .HasConstraintName("FK__Teacher__Account__300424B4");
+                    .HasConstraintName("FK__Teacher__Account__3C69FB99");
             });
 
             OnModelCreatingPartial(modelBuilder);
