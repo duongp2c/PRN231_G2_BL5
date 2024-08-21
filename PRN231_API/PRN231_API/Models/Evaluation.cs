@@ -15,5 +15,6 @@ namespace PRN231_API.Models
         public virtual GradeType? GradeType { get; set; }
         public virtual Student? Student { get; set; }
         public virtual Subject? Subject { get; set; }
+
     }
 }
