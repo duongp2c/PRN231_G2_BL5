@@ -1,3 +1,4 @@
+using PRN231_API.DTO;
 using PRN231_API.Models;
 using PRN231_API.Repository;
 
@@ -28,14 +29,14 @@ namespace PRN231_API.DAO
             };
             return profile;
         }
-        public async Task<List<SubjectDTO>> GetStudentSubjectAsync(int accountId)
+        public async Task<List<Subject1DTO>> GetStudentSubjectAsync(int accountId)
         {
             var student = await _studentRepository.GetStudentByIdAsync(accountId);
             List<StudentSubject> ss = await _studentRepository.GetStudentSubjectsAsync(student.StudentId);
-            List<SubjectDTO> subjects = new List<SubjectDTO>();
+            List<Subject1DTO> subjects = new List<Subject1DTO>();
             foreach (var subject in ss) 
             {
-                SubjectDTO s = new SubjectDTO
+                Subject1DTO s = new Subject1DTO
                 {
                     Name = subject.Subject.SubjectName,
                     SubjectId = subject.Subject.SubjectId

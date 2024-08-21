@@ -1,6 +1,6 @@
 namespace PRN231_API.DTO
 {
-    public class SubjectDTO
+    public class Subject1DTO
     {
         public string Name { get; set; }
         public int SubjectId { get; set; }
