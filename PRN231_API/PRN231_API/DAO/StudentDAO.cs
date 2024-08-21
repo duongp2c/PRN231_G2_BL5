@@ -28,12 +28,12 @@ namespace PRN231_API.DAO
             };
             return profile;
         }
-        public async Task<string> UpdateStudentDetailAsync(ProfileDTO profile)
+        public async Task<string> UpdateStudentDetailAsync(ProfileDTO profile , int id)
         {
-            var student = await _studentRepository.GetStudentByIdAsync(0);//sua sau khi co session
+            var student = await _studentRepository.GetStudentByIdAsync(id);//sua sau khi co session
             if (student == null)
                 return "Student not found.";
-            var studentDetail = await _studentRepository.GetStudentDetailByIdAsync(0);//sua sau khi co session
+            var studentDetail = await _studentRepository.GetStudentDetailByIdAsync(id);//sua sau khi co session
             if (studentDetail == null)
                 return "StudentDetail not found.";
             student.Name = profile.Name;

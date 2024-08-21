@@ -2,10 +2,10 @@
 {
     public class GradeDTO
     {
-        public string Name;
-        public decimal? Weight;
-        public decimal? Grade;
-        public string AdditionalInfo;
+        public string Name { get; set; }
+        public decimal? Weight { get; set; }
+        public decimal? Grade { get; set; }
+        public string AdditionalInfo { get; set; }
 
     }
 }

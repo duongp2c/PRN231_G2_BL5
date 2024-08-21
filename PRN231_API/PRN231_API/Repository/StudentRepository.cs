@@ -46,7 +46,9 @@ namespace PRN231_API.Repository
 
         public async Task<StudentDetail?> GetStudentDetailByIdAsync(int studentId)
         {
-            return await _context.StudentDetails.FindAsync(studentId);
+            return await _context.StudentDetails
+                .Where(s => s.StudentId == studentId)
+                .FirstOrDefaultAsync();
         }
     }
 }

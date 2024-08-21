@@ -2,13 +2,11 @@
 {
     public class ProfileDTO
     {
-        public string Name;
-        public int Age;
-        public string Address;
-        public string AdditionalInfo;
-        public string Phone;
-        public string Image;
-
-
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Address { get; set; }
+        public string AdditionalInfo { get; set; }
+        public string Phone { get; set; }
+        public string Image { get; set; }
     }
 }

@@ -15,15 +15,16 @@ namespace PRN231_API.Controllers
         {
             _studentDao = studentDao;
         }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetProfile(int studentId)
+        [HttpGet("profile/{id}")]
+        public async Task<ActionResult<ProfileDTO>> GetProfile(int id)
         {
-            return Ok( await _studentDao.GetStudentDetailAsync(studentId));
+            var profile = await _studentDao.GetStudentDetailAsync(id);
+            return Ok(profile);
         }
-        [HttpPost("profile")]
-        public async Task<IActionResult> UpdateProfile([FromForm] ProfileDTO profile)
+        [HttpPost("update/{id}")]
+        public async Task<IActionResult> UpdateProfile([FromForm] ProfileDTO profile ,int id)
         {
-            var result = await _studentDao.UpdateStudentDetailAsync(profile);
+            var result = await _studentDao.UpdateStudentDetailAsync(profile,id);
             if (result == "Update success")
                 return Ok(result);
             else
