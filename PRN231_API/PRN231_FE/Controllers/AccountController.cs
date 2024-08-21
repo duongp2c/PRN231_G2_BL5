@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PRN231_FE.Models;
+using System.IdentityModel.Tokens.Jwt;
+
 namespace PRN231_FE.Controllers
 {
 
@@ -55,11 +57,20 @@ namespace PRN231_FE.Controllers
             {
                 var jsonContent = JsonConvert.SerializeObject(model);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync("https://your-api-url/api/auth/login", content);
+                var response = await _httpClient.PostAsync("http://localhost:5231/api/Account/login", content);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var token = await response.Content.ReadAsStringAsync();
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+                    var loginResponse = JsonConvert.DeserializeObject<TokenModel>(jsonResponse);
+                    string token = loginResponse.AccessToken;
+
+                    var handler = new JwtSecurityTokenHandler();
+                    var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+                    var accountId = jsonToken.Claims.First(claim => claim.Type == "UserID").Value;
+
+                    // Save the AccountId to the session
+                    HttpContext.Session.SetString("AccountId", accountId);
                     // Store the token in a cookie or session
                     return RedirectToAction("Index", "Home");
                 }

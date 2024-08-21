@@ -57,7 +57,23 @@ namespace PRN231_API.Repository
 
                 user.IsActive = true;
                 user.ActiveCode = null;
+
+                var newStudent = new Student
+                {
+                    IsRegularStudent = true,
+                    AccountId = user.AccountId
+                };
+
+                _context.Students.Add(newStudent);
                 _context.SaveChanges();
+
+                var studentDetail = new StudentDetail
+                {
+                    StudentId = newStudent.StudentId 
+                };
+
+                _context.StudentDetails.Add(studentDetail);
+                await _context.SaveChangesAsync();
                 return new CustomResponse { Message = "Success", StatusCode = 200 };
             }
             catch (Exception ex)

@@ -63,13 +63,13 @@ namespace PRN231_API.DAO
 
         public async Task<TokenModel> Refresh([FromBody] TokenModel model)
         {
-            var username = await _jwtTokenService.GetRefreshTokenFromRedisAsync(model.Email);
-            if (username == null)
+            var refreshtoken = await _jwtTokenService.GetRefreshTokenFromRedisAsync(model.Email);
+            if (refreshtoken == null)
             {
                 return null;
             }
 
-            var user = await _accountRepository.GetUserByUsernameAsync(username);
+            var user = await _accountRepository.GetUserByUsernameAsync(model.Email);
             if (user == null)
             {
                 return null;

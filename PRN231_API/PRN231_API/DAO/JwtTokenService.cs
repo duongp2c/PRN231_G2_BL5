@@ -1,10 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using PRN231_API.Models;
+using PRN231_API.ViewModel;
 using StackExchange.Redis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace PRN231_API.DAO
@@ -65,6 +68,7 @@ namespace PRN231_API.DAO
             try
             {
                 var db = _redis.GetDatabase();
+                var tokenData = JsonConvert.SerializeObject(refreshToken);
                 await db.StringSetAsync($"refresh_token:{username}", refreshToken, TimeSpan.FromDays(30));
 
             }
