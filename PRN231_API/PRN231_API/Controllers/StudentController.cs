@@ -21,6 +21,7 @@ namespace PRN231_API.Controllers
             var profile = await _studentDao.GetStudentDetailAsync(id);
             return Ok(profile);
         }
+
         [HttpPost("update/{id}")]
         public async Task<IActionResult> UpdateProfile([FromForm] ProfileDTO profile ,int id)
         {

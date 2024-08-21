@@ -15,9 +15,10 @@ namespace PRN231_API.Repository
 
         }
 
-        public async Task<Student?> GetStudentByIdAsync(int studentId)
+        public async Task<Student?> GetStudentByIdAsync(int id)
         {
-            return await _context.Students.FindAsync(studentId);
+            //return await _context.Students.FindAsync(studentId);
+            return await _context.Students.Where(s => s.AccountId == id).FirstOrDefaultAsync();
         }
 
         public async Task<List<StudentSubject>> GetStudentSubjectsAsync(int studentId)
@@ -46,10 +47,10 @@ namespace PRN231_API.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<StudentDetail?> GetStudentDetailByIdAsync(int studentId)
+        public async Task<StudentDetail?> GetStudentDetailByIdAsync(int id)
         {
             return await _context.StudentDetails
-                .Where(s => s.StudentId == studentId)
+                .Where(s => s.StudentId == id)
                 .FirstOrDefaultAsync();
         }
     }

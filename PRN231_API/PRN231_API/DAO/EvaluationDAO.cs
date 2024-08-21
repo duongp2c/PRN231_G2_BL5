@@ -8,16 +8,17 @@ namespace PRN231_API.DAO
     public class EvaluationDAO
     {
         private readonly IEvaluationRepository _eRepository;
+        private readonly IStudentRepository _sRepository;
 
-
-        public EvaluationDAO(IEvaluationRepository eRepository)
+        public EvaluationDAO(IEvaluationRepository eRepository, IStudentRepository sRepository)
         {
             _eRepository = eRepository;
-
+            _sRepository = sRepository;
         }
-        public async Task<List<GradeDTO>> GetStudentSubjectGradeAsync(int studentId, int subjectId)
+        public async Task<List<GradeDTO>> GetStudentSubjectGradeAsync(int accountId, int subjectId)
         {
-            List<Evaluation> evaluations = await _eRepository.GetEvaluationBySubjectAndStudent(studentId, subjectId);
+            var student = await _sRepository.GetStudentByIdAsync(accountId);
+            List<Evaluation> evaluations = await _eRepository.GetEvaluationBySubjectAndStudent(student.StudentId, subjectId);
             List<GradeDTO> grades = new List<GradeDTO>();   
             foreach (Evaluation e in evaluations)
             {

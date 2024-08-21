@@ -14,10 +14,10 @@ namespace PRN231_API.DAO
             _studentRepository = studentRepository;
 
         }
-        public async Task<ProfileDTO> GetStudentDetailAsync(int studentId)
+        public async Task<ProfileDTO> GetStudentDetailAsync(int accountId)
         {
-            var student = await _studentRepository.GetStudentByIdAsync(studentId);
-            var studentDetail = await _studentRepository.GetStudentDetailByIdAsync(studentId);
+            var student = await _studentRepository.GetStudentByIdAsync(accountId);
+            var studentDetail = await _studentRepository.GetStudentDetailByIdAsync(student.StudentId);
             var profile = new ProfileDTO { 
                 Name = student.Name,
                 Age = student.Age,
@@ -28,9 +28,10 @@ namespace PRN231_API.DAO
             };
             return profile;
         }
-        public async Task<List<SubjectDTO>> GetStudentSubjectAsync(int studentId)
+        public async Task<List<SubjectDTO>> GetStudentSubjectAsync(int accountId)
         {
-            List<StudentSubject> ss = await _studentRepository.GetStudentSubjectsAsync(studentId);
+            var student = await _studentRepository.GetStudentByIdAsync(accountId);
+            List<StudentSubject> ss = await _studentRepository.GetStudentSubjectsAsync(student.StudentId);
             List<SubjectDTO> subjects = new List<SubjectDTO>();
             foreach (var subject in ss) 
             {
