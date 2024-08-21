@@ -18,7 +18,7 @@ namespace PRN231_FE.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var url = "http://localhost:5231/api/Student/profile/1";
+            var url = "http://localhost:5000/api/Student/profile/1";
             ProfileDTO profile = new ProfileDTO();
             using (var client = new HttpClient())
             {
@@ -62,7 +62,7 @@ namespace PRN231_FE.Controllers
                 formData["phone"] = phone;
                 formData["image"] = "image";
                 HttpContent formContent = new FormUrlEncodedContent(formData);
-                var response = await _httpClient.PostAsync("http://localhost:5231/api/Student/update/1", formContent);
+                var response = await _httpClient.PostAsync("http://localhost:5000/api/Student/update/1", formContent);
             }
             return RedirectToAction("Index", "Profile");
         }

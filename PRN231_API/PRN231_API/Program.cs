@@ -5,18 +5,15 @@ using PRN231_API.Models;
 using PRN231_API.Repository;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.OData;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
-using PRN231_API.DAO;
-using PRN231_API.Models;
-using PRN231_API.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 using System.Security.Claims;
 using System.Text;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 
 
@@ -30,9 +27,8 @@ builder.Services.AddTransient<IJwtTokenService, JwtTokenService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddControllers().AddJsonOptions(x =>
-   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
-
+//builder.Services.AddControllers().AddJsonOptions(x =>
+//   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 builder.Services.AddCors(opts =>
 {
     opts.AddPolicy("CORSPolicy", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed((host) => true));
@@ -153,7 +149,6 @@ if (app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 
-app.UseCors("CORSPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
