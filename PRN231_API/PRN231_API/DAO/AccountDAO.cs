@@ -12,6 +12,7 @@ using PRN231_API.Models;
 using PRN231_API.Repository;
 using PRN231_API.ViewModel;
 using static PRN231_API.DAO.AccountDAO;
+using Microsoft.AspNetCore.Http;
 
 
 namespace PRN231_API.DAO
@@ -19,11 +20,11 @@ namespace PRN231_API.DAO
         public interface IAccountService 
     {
         Task<CustomResponse> RegisterAccount(AccountRegisterDto userDto);
-        Task<TokenModel> LoginAccount(AccountLoginDto userDto);
+        Task<TokenModel> LoginAccount(AccountLoginDto userDto, HttpContext httpContext);
         Task<TokenModel> Refresh(TokenModel tokenModel);
         Task<CustomResponse> ActiveAccount(ActiveViewModel activeModel);
     }
-    public class AccountDAO
+    public class AccountDAO : IAccountService
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IConfiguration _configuration;
@@ -107,7 +108,7 @@ namespace PRN231_API.DAO
             public string ActivationCode { get; set; }
         }
 
-        public async Task<TokenModel> LoginAccount(AccountLoginDto userDto)
+        public async Task<TokenModel> LoginAccount(AccountLoginDto userDto, HttpContext httpContext)
         {
             try
             {
@@ -115,19 +116,22 @@ namespace PRN231_API.DAO
                 if (user == null)
                     return null;
 
+                // Tạo token và refresh token
                 var token = _jwtTokenService.GenerateToken(user);
                 var refreshToken = _jwtTokenService.GenerateRefreshToken();
                 await _jwtTokenService.SaveRefreshTokenToRedisAsync(refreshToken, user.Email);
 
+                // Lưu AccountId vào session sau khi đăng nhập thành công
+                httpContext.Session.SetInt32("AccountId", user.AccountId);
 
                 return new TokenModel { AccessToken = token, RefreshToken = refreshToken };
-
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
 
         public async Task<TokenModel> Refresh([FromBody] TokenModel model)
         {
@@ -174,7 +178,7 @@ namespace PRN231_API.DAO
         {
             try
             {
-                var user = await _accountRepository.ActiveAccount(activeModel);
+                _accountRepository.ActiveAccount(activeModel);
                 return new CustomResponse { Message = "Success", StatusCode = 200 };
             }
             catch (Exception ex)

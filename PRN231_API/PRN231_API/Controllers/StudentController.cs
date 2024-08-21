@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PRN231_API.DAO;
 
 namespace PRN231_API.Controllers
@@ -13,15 +14,20 @@ namespace PRN231_API.Controllers
         {
             _studentDao = studentDao;
         }
-        [HttpPost("{studentId}/register/{subjectId}")]
-        public async Task<IActionResult> RegisterSubject(int studentId, int subjectId)
+        [Authorize("Student")]
+        [HttpPost("register/{subjectId}")]
+        public async Task<IActionResult> RegisterSubject(int subjectId)
         {
-            var result = await _studentDao.RegisterSubjectAsync(studentId, subjectId);
+            // Gọi phương thức RegisterSubjectAsync và truyền HttpContext
+            var result = await _studentDao.RegisterSubjectAsync(subjectId, HttpContext);
+
+            // Kiểm tra kết quả và trả về phản hồi phù hợp
             if (result == "Subject registered successfully.")
                 return Ok(result);
             else
                 return BadRequest(result);
         }
+
 
     }
 }

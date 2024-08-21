@@ -94,7 +94,7 @@ namespace PRN231_API.Models
                     .IsUnique();
 
                 entity.Property(e => e.Name)
-                    .IsRequired()
+                    
                     .HasMaxLength(100);
 
                 entity.HasOne(d => d.Account)

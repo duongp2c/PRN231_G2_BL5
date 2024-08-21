@@ -34,7 +34,6 @@ namespace PRN231_API.Controllers
         {
             var result = await _accountDao.RequestPasswordResetAsync(request.Email);
             if (!result) return NotFound("Email not found.");
-
             return Ok("Password reset link sent.");
         }
 
@@ -64,7 +63,7 @@ namespace PRN231_API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<TokenModel>> Login(AccountLoginDto userDto)
         {
-            return await _accountService.LoginAccount(userDto);
+            return await _accountService.LoginAccount(userDto, HttpContext);
         }
 
         [HttpPost("activate")]

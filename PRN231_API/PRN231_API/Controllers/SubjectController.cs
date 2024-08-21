@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using PRN231_API.DAO;
 
@@ -21,6 +22,7 @@ namespace PRN231_API.Controllers
             var subjects = _subjectDAO.GetAllSubjects().AsQueryable();
             return Ok(subjects);
         }
+        [Authorize("Student")]
         [HttpGet("student/{studentId}")]
         public IActionResult GetSubjectsByStudentID(int studentId)
         {

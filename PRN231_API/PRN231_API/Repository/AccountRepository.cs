@@ -104,7 +104,7 @@ namespace PRN231_API.Repository
                 };
 
                 _context.StudentDetails.Add(studentDetail);
-                await _context.SaveChangesAsync();
+                 _context.SaveChanges();
                 return new CustomResponse { Message = "Success", StatusCode = 200 };
             }
             catch (Exception ex)

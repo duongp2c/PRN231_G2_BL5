@@ -21,9 +21,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddTransient<IJwtTokenService, JwtTokenService>();
-builder.Services.AddDbContext<SchoolDBContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("StudentManagement")));
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(opts =>
@@ -46,7 +43,7 @@ builder.Services.AddScoped<SubjectDAO>();
 
 builder.Services.AddScoped<EmailDAO>();
 builder.Services.AddScoped<JwtTokenService>();
-//builder.Services.AddScoped<IAccountService, AccountDAO>();
+builder.Services.AddScoped<IAccountService, AccountDAO>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 builder.Services.AddDistributedMemoryCache();
@@ -140,6 +137,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("CORSPolicy");
 
+app.UseSession();
 app.UseODataBatching();
 
 app.MapControllers();

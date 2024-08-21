@@ -13,9 +13,9 @@ namespace PRN231_API.Models
 
         public int StudentId { get; set; }
         public int? AccountId { get; set; }
-        public string Name { get; set; } = null!;
-        public int Age { get; set; }
-        public bool IsRegularStudent { get; set; }
+        public string? Name { get; set; } 
+        public int? Age { get; set; }
+        public bool? IsRegularStudent { get; set; }
 
         public virtual Account? Account { get; set; }
         public virtual StudentDetail? StudentDetail { get; set; }

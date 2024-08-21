@@ -32,7 +32,7 @@ namespace PRN231_FE.Controllers
             {
                 var jsonContent = JsonConvert.SerializeObject(model);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync("http://localhost:5231/api/Account/register", content);
+                var response = await _httpClient.PostAsync("http://localhost:5000/api/Account/register", content);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -57,7 +57,7 @@ namespace PRN231_FE.Controllers
             {
                 var jsonContent = JsonConvert.SerializeObject(model);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync("http://localhost:5231/api/Account/login", content);
+                var response = await _httpClient.PostAsync("http://localhost:5000/api/Account/login", content);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -93,7 +93,7 @@ namespace PRN231_FE.Controllers
             {
                 var jsonContent = JsonConvert.SerializeObject(model);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync("http://localhost:5231/api/Account/activate", content);
+                var response = await _httpClient.PostAsync("http://localhost:5000/api/Account/activate", content);
 
                 if (response.IsSuccessStatusCode)
                 {

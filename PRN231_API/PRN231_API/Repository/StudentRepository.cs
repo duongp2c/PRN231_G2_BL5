@@ -33,6 +33,23 @@ namespace PRN231_API.Repository
             _context.StudentSubjects.Add(studentSubject);
             await _context.SaveChangesAsync();
         }
+        public async Task<int?> GetStudentIdByAccountIdAsync(int accountId)
+        {
+
+            // Retrieve the student while considering the possibility of null values
+            var student = await _context.Students
+                                        .Where(x => x.AccountId == accountId)
+                                        .FirstOrDefaultAsync();
+
+            // Check if student is null
+            if (student == null)
+            {
+                return null;  // Return null if the student was not found
+            }
+
+            // If found, return the StudentId
+            return student.StudentId;  // StudentId is nullable, so this is safe
+        }
 
     }
 }
