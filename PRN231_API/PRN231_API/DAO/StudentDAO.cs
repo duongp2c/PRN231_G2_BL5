@@ -1,6 +1,7 @@
 using PRN231_API.DTO;
 using PRN231_API.Models;
 using PRN231_API.Repository;
+using System.Net.Cache;
 
 namespace PRN231_API.DAO
 {
@@ -17,11 +18,20 @@ namespace PRN231_API.DAO
         
         public async Task<ProfileDTO> GetStudentDetailAsync(int accountId)
         {
-            var student = await _studentRepository.GetStudentByIdAsync(accountId);
+            var student = await _studentRepository.GetStudentByAccountIdAsync(accountId);
             var studentDetail = await _studentRepository.GetStudentDetailByIdAsync(student.StudentId);
+            int? a = 0;
+            if (student.Age == null)
+            {
+                a = 0;
+            }
+            else
+            {
+                a = student.Age;
+            }
             var profile = new ProfileDTO { 
-                Name = student.Name,
-                Age = student.Age,
+                Name = student.Name,               
+                Age = a,
                 Address = studentDetail.Address,
                 AdditionalInfo = studentDetail.AdditionalInformation,
                 Phone = studentDetail.Phone,
@@ -31,7 +41,7 @@ namespace PRN231_API.DAO
         }
         public async Task<List<Subject1DTO>> GetStudentSubjectAsync(int accountId)
         {
-            var student = await _studentRepository.GetStudentByIdAsync(accountId);
+            var student = await _studentRepository.GetStudentByAccountIdAsync(accountId);
             List<StudentSubject> ss = await _studentRepository.GetStudentSubjectsAsync(student.StudentId);
             List<Subject1DTO> subjects = new List<Subject1DTO>();
             foreach (var subject in ss) 
@@ -47,10 +57,10 @@ namespace PRN231_API.DAO
         }
         public async Task<string> UpdateStudentDetailAsync(ProfileDTO profile , int id)
         {
-            var student = await _studentRepository.GetStudentByIdAsync(id);//sua sau khi co session
+            var student = await _studentRepository.GetStudentByAccountIdAsync(id);//sua sau khi co session
             if (student == null)
                 return "Student not found.";
-            var studentDetail = await _studentRepository.GetStudentDetailByIdAsync(id);//sua sau khi co session
+            var studentDetail = await _studentRepository.GetStudentDetailByIdAsync(student.StudentId);//sua sau khi co session
             if (studentDetail == null)
                 return "StudentDetail not found.";
             student.Name = profile.Name;
