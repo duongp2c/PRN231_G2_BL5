@@ -21,7 +21,7 @@ app.UseAuthorization();
 app.UseHttpsRedirection();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=ManageGrade}/{action=Index}/{id?}");
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers(); // Ensure this line is present

@@ -1,4 +1,4 @@
-﻿/*using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PRN231_API.DAO;
 using PRN231_API.DTO;
 
@@ -27,52 +27,59 @@ namespace PRN231_API.Controllers
             return Ok(gradeType);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateGradeType([FromBody] CreateGradeTypeDTO createGradeTypeDTO)
+        [HttpGet("GetAllGradeTypes")]
+        public async Task<IActionResult> GetAllGradeTypes()
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
-                var gradeTypeDTO = await _manageGradeTypeDAO.CreateGradeTypeAsync(createGradeTypeDTO);
-                return CreatedAtAction(nameof(GetGradeTypeById), new { gradeTypeId = gradeTypeDTO.GradeTypeId }, gradeTypeDTO);
+                var grades = await _manageGradeTypeDAO.GetAllGradeTypesAsync();
+
+                if (grades == null || !grades.Any())
+                {
+                    return NotFound("No grade type found.");
+                }
+
+                return Ok(grades);
             }
             catch (Exception ex)
             {
-                // Log the exception
                 Console.WriteLine($"An error occurred: {ex.Message}");
                 return StatusCode(500, "Internal server error.");
             }
         }
 
-        [HttpPost("AssociateGradeTypeWithSubject")]
-        public async Task<IActionResult> AssociateGradeTypeWithSubject([FromBody] GradeTypeDTO gradeTypeSubjectDTO)
+        [HttpPost("CreateGradeType")]
+        public async Task<IActionResult> CreateGradeType([FromBody] CreateGradeTypeDTO createGradeTypeDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
-                var result = await _manageGradeTypeDAO.AssociateGradeTypeWithSubjectAsync(gradeTypeSubjectDTO);
-                if (result == "GradeType successfully associated with Subject.")
-                    return Ok(result);
-                else
-                    return BadRequest(result);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                var gradetypeDTO = await _manageGradeTypeDAO.CreateGradeTypeAsync(createGradeTypeDTO);
+                return Ok(gradetypeDTO);
             }
-            catch (Exception ex)
+            catch
             {
-                // Log the exception
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                return StatusCode(500, "Internal server error.");
+                return BadRequest();
+            }
+        }
+
+        [HttpDelete("{gradetypeId}")]
+        public async Task<IActionResult> DeleteGradeType(int gradetypeId)
+        {
+            try
+            {
+                var result = await _manageGradeTypeDAO.DeleteGradeTypeAsync(gradetypeId);
+                return Ok("Grade Type deleted successfully.");
+            }
+            catch
+            {
+                return BadRequest();
             }
         }
     }
 
 
 }
-*/

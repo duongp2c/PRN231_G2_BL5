@@ -1,4 +1,5 @@
-﻿using PRN231_API.DTO;
+﻿using PRN231_API.Common;
+using PRN231_API.DTO;
 using PRN231_API.Repository;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,21 +25,20 @@ namespace PRN231_API.DAO
             return await _subjectRepository.GetSubjectByIdAsync(subjectId);
         }
 
-        public async Task<SubjectDTO> CreateSubjectAsync(CreateSubjectDTO createSubjectDTO)
+        public async Task<CustomResponse> CreateSubjectAsync(CreateSubjectDTO createSubjectDTO)
         {
-            await _subjectRepository.CreateSubjectAsync(createSubjectDTO);
-            return await _subjectRepository.GetSubjectByIdAsync(createSubjectDTO.SubjectId);
+            return await _subjectRepository.CreateSubjectAsync(createSubjectDTO);
+
         }
 
-        public async Task<SubjectDTO?> UpdateSubjectAsync(int subjectId, CreateSubjectDTO updateSubjectDTO)
+        public async Task<CustomResponse?> UpdateSubjectAsync(int subjectId, CreateSubjectDTO updateSubjectDTO)
         {
-            await _subjectRepository.UpdateSubjectAsync(subjectId, updateSubjectDTO);
-            return await _subjectRepository.GetSubjectByIdAsync(subjectId);
+            return await _subjectRepository.UpdateSubjectAsync(subjectId, updateSubjectDTO);
         }
 
-        public async Task<bool> DeleteSubjectAsync(int subjectId)
+        public async Task<CustomResponse> DeleteSubjectAsync(int subjectId)
         {
-            return await _subjectRepository.DeleteSubjectAsync(subjectId) == 1;
+            return await _subjectRepository.DeleteSubjectAsync(subjectId);
         }
     }
 }

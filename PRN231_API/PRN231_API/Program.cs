@@ -36,6 +36,8 @@ builder.Services.AddTransient<ITeacherRepository, TeacherRepository>();
 builder.Services.AddScoped<StudentDAO>();
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 builder.Services.AddScoped<ManageSubjectDAO>();
+builder.Services.AddScoped<IManageGradeTypeRepository, ManageGradeTypeRepository>();
+builder.Services.AddScoped<ManageGradeTypeDAO>();
 
 var app = builder.Build();
 

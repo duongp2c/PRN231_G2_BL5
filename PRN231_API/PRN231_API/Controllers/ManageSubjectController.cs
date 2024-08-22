@@ -34,9 +34,7 @@ namespace PRN231_API.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception (you might use a logging framework here)
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                return StatusCode(500, "Internal server error.");
+                throw new Exception(ex.Message);
             }
         }
 
@@ -50,46 +48,52 @@ namespace PRN231_API.Controllers
             return Ok(subject);
         }
 
-        [HttpPost]
+        [HttpPost("CreateSubject")]
         public async Task<IActionResult> CreateSubject([FromBody] CreateSubjectDTO createSubjectDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
                 var subjectDTO = await _subjectDAO.CreateSubjectAsync(createSubjectDTO);
-                return CreatedAtAction(nameof(GetSubjectById), new { subjectId = subjectDTO.SubjectId }, subjectDTO);
+                return Ok(subjectDTO);
             }
-            catch (Exception ex)
+            catch
             {
-                // Log the exception (you might use a logging framework here)
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                return StatusCode(500, "Internal server error.");
+                return BadRequest();
             }
         }
 
 
-        [HttpPut("{subjectId}")]
+        [HttpPut("UpdateSubject")]
         public async Task<IActionResult> UpdateSubject(int subjectId, [FromForm] CreateSubjectDTO updateSubjectDTO)
         {
-            var updatedSubject = await _subjectDAO.UpdateSubjectAsync(subjectId, updateSubjectDTO);
-            if (updatedSubject == null)
-                return NotFound("Subject not found.");
 
-            return Ok(updatedSubject);
+            try
+            {
+                var updatedSubject = await _subjectDAO.UpdateSubjectAsync(subjectId, updateSubjectDTO);
+                return Ok(updatedSubject);
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpDelete("{subjectId}")]
         public async Task<IActionResult> DeleteSubject(int subjectId)
         {
-            var result = await _subjectDAO.DeleteSubjectAsync(subjectId);
-            if (result)
+            try
+            {
+                var result = await _subjectDAO.DeleteSubjectAsync(subjectId);
                 return Ok("Subject deleted successfully.");
-            else
-                return NotFound("Subject not found.");
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
     }
 }
