@@ -56,6 +56,7 @@
                     </div>
                 </form>
             </div>
+                <div asp-validation-summary="All" class="text-danger"></div>
             <table id="subjectTable" class="table table-striped table-bordered table-white text-dark">
                 <thead class="thead-light">
                     <tr>
@@ -69,6 +70,8 @@
                     <!-- Data will be dynamically populated here -->
                 </tbody>
             </table>
+
+
             <nav aria-label="Page navigation">
                 <ul id="pagination" class="pagination justify-content-center"></ul>
             </nav>
@@ -201,7 +204,7 @@
                                 window.location.reload();
                             } else {
                                 console.error('Failed to delete subject.');
-                                alert('Failed to delete subject. Please try again.');
+                                alert('Failed to delete subject. Because this subject has been studying!.');
                             }
                         } catch (error) {
                             console.error('Error deleting subject:', error);

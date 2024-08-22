@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
 
@@ -86,8 +87,11 @@ namespace PRN231_FE.Controllers
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "An error occurred while deleting the student.";
-                    return RedirectToAction("Index");
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    var errorResponse = JsonConvert.DeserializeObject<dynamic>(responseBody);
+
+                    ModelState.AddModelError(string.Empty, (string)errorResponse.message);
+                    return View();
                 }
             }
             catch (Exception ex)

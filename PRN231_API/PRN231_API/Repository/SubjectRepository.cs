@@ -87,10 +87,14 @@ namespace PRN231_API.Repository
 
         public async Task<CustomResponse> DeleteSubjectAsync(int id)
         {
+            bool checkSubjectExist = _context.StudentSubjects.Any(ss => ss.SubjectId == id);
+            if (checkSubjectExist)
+                return new CustomResponse { Message = "Cannot delete this subject because it been studied!", StatusCode = 400 };
+
             var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.SubjectId == id);
 
             if (subject == null)
-                return new CustomResponse { Message = "Cannot find this subject", StatusCode = 400 };
+                return new CustomResponse { Message = "Cannot find this subject", StatusCode = 401 };
 
             _context.Subjects.Remove(subject);
             await _context.SaveChangesAsync();

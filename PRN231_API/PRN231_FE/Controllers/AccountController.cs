@@ -77,11 +77,11 @@ namespace PRN231_FE.Controllers
                         var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
                         var accountId = jsonToken.Claims.First(claim => claim.Type == "UserID").Value;
                         var role = jsonToken.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+
+
                         HttpContext.Session.SetString("AuthToken", token);
                         HttpContext.Session.SetString("Role", role);
-                        // Save the AccountId to the session
                         HttpContext.Session.SetString("AccountId", accountId);
-                        // Store the token in a cookie or session
                         return RedirectToAction("Index", "Home");
                     }
                     else
