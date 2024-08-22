@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "List of Students";
     var searchName = ViewData["SearchName"] as string;
+    var token = Context.Session.GetString("AuthToken");
 }
 
 <section class="product-page spad">
@@ -91,6 +92,7 @@
 
             async function fetchStudents() {
                 try {
+                    var token = '@token';
                     const response = await fetch(apiUrl);
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
@@ -191,7 +193,14 @@
 
             async function deleteStudent(studentId) {
                 try {
-                    const response = await fetch(`/ManageStudent/DeleteStudent?id=${studentId}`, { method: 'POST' });
+                    var token = '@token';
+                    const response = await fetch(`/ManageStudent/DeleteStudent?id=${studentId}`,
+                    { method: 'POST',
+                                headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json' // Optional, depending on your API
+                        }
+                    });
                     if (response.ok) {
                         // Display success message
                         alert('Student deleted successfully.');

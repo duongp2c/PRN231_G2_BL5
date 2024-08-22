@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "List of GradeTypes";
     var searchName = ViewData["SearchName"] as string;
+    var token = Context.Session.GetString("AuthToken");
 }
 
 <section class="product-page spad">
@@ -88,7 +89,14 @@
 
             async function fetchSubjects() {
                 try {
-                    const response = await fetch(`${apiUrl}/GetAllGradeTypes`);
+                    var token = '@token';
+                    const response = await fetch(`${apiUrl}/GetAllGradeTypes`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
@@ -176,9 +184,11 @@
                         const id = form.querySelector('input[name="id"]').value;
 
                         try {
+                            var token = '@token';
                             const response = await fetch(`/ManageGrade/DeleteGrade`, {
                                 method: 'POST',
                                 headers: {
+                                'Authorization': `Bearer ${token}`,
                                     'Content-Type': 'application/x-www-form-urlencoded',
                                 },
                                 body: new URLSearchParams({ id: id })

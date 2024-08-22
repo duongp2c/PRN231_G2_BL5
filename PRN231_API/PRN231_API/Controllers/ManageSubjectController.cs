@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PRN231_API.DAO;
 using PRN231_API.DTO;
 using System.Collections.Generic;
@@ -49,6 +50,7 @@ namespace PRN231_API.Controllers
             return Ok(subject);
         }
 
+        [Authorize("Admin")]
         [HttpPost("CreateSubject")]
         public async Task<IActionResult> CreateSubject([FromBody] CreateSubjectDTO createSubjectDTO)
         {
@@ -68,6 +70,7 @@ namespace PRN231_API.Controllers
         }
 
 
+        [Authorize("Admin")]
         [HttpPut("UpdateSubject")]
         public async Task<IActionResult> UpdateSubject(int subjectId, [FromForm] CreateSubjectDTO updateSubjectDTO)
         {
@@ -83,6 +86,7 @@ namespace PRN231_API.Controllers
             }
         }
 
+        [Authorize("Admin")]
         [HttpDelete("{subjectId}")]
         public async Task<IActionResult> DeleteSubject(int subjectId)
         {

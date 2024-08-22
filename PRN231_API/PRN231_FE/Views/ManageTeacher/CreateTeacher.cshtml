@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var token = Context.Session.GetString("AuthToken");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -59,7 +63,7 @@
 
             $('#createTeacherForm').on('submit', function (event) {
                 event.preventDefault(); // Prevent the default form submission
-
+                var token = '@token';
                 var formData = {
                     TeacherName: $('#TeacherName').val(),
                     Email: $('#Email').val(),
@@ -88,6 +92,9 @@
                 $.ajax({
                     url: 'http://localhost:5000/api/ManageTeacher/CreateTeacher',
                     type: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
                     contentType: 'application/json',
                     data: JSON.stringify(formData),
                     success: function (response) {

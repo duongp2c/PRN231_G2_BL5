@@ -17,7 +17,6 @@ namespace PRN231_API.Controllers
         }
 
 
-        [Authorize("Teacher, Admin")]
         [HttpGet("{gradeTypeId}")]
         public async Task<IActionResult> GetGradeTypeById(int gradeTypeId)
         {
@@ -29,7 +28,6 @@ namespace PRN231_API.Controllers
         }
 
 
-        [Authorize("Teacher, Admin")]
         [HttpGet("GetAllGradeTypes")]
         public async Task<IActionResult> GetAllGradeTypes()
         {

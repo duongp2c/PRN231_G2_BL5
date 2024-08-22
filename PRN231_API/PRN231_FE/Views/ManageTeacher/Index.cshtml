@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "List of Teachers";
     var searchName = ViewData["SearchName"] as string;
+    var token = Context.Session.GetString("AuthToken");
 }
 
 <section class="product-page spad">
@@ -89,7 +90,14 @@
 
             async function fetchTeachers() {
                 try {
-                    const response = await fetch(`${apiUrl}/GetAllTeachers`);
+                    var token = '@token';
+                    const response = await fetch(`${apiUrl}/GetAllTeachers`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
@@ -214,9 +222,11 @@
                         const id = form.querySelector('input[name="id"]').value;
 
                         try {
+                            var token = '@token';
                             const response = await fetch(`/ManageTeacher/DeleteTeacher`, {
                                 method: 'POST',
                                 headers: {
+                                    'Authorization': `Bearer ${token}`,
                                     'Content-Type': 'application/x-www-form-urlencoded',
                                 },
                                 body: new URLSearchParams({ id: id })

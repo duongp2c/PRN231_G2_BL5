@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var token = Context.Session.GetString("AuthToken");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -33,9 +37,13 @@
 
     <script>
         $(document).ready(function () {
+            var token = '@token';
             $.ajax({
                 url: 'http://localhost:5000/api/ManageTeacher/GetAllTeachers', // Replace with your API endpoint
                 type: 'GET',
+                headers: {
+                        'Authorization': 'Bearer ' + token
+                },
                 success: function (data) {
                     var select = $('#TeacherId');
                     // Loop through the data and create an option for each teacher
@@ -64,7 +72,7 @@
 
             $('#createSubjectForm').on('submit', function (event) {
                 event.preventDefault(); // Prevent the default form submission
-
+                var token = '@token';
                 var formData = {
                     SubjectName: $('#SubjectName').val(),
                     TeacherId: $('#TeacherId').val()
@@ -87,6 +95,9 @@
                 $.ajax({
                     url: 'http://localhost:5000/api/ManageSubject/CreateSubject',
                     type: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
                     contentType: 'application/json',
                     data: JSON.stringify(formData),
                     success: function (response) {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PRN231_API.DAO;
 using PRN231_API.DTO;
 
@@ -36,6 +37,8 @@ namespace PRN231_API.Controllers
 
             return Ok(students);
         }
+
+        [Authorize("Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
@@ -58,6 +61,8 @@ namespace PRN231_API.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
         }
 
+
+        [Authorize("Admin")]
         [HttpPut("{studentId}/status")]
         public async Task<IActionResult> EditIsActiveStudent(int studentId, [FromQuery] bool isActive)
         {
@@ -67,6 +72,9 @@ namespace PRN231_API.Controllers
             else
                 return NotFound("Student not found.");
         }
+
+
+        [Authorize("Admin")]
         [HttpGet("search")]
         public async Task<IActionResult> SearchStudentsByNameAsync([FromQuery] string name)
         {

@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "List of Subjects";
     var searchName = ViewData["SearchName"] as string;
+    var token = Context.Session.GetString("AuthToken");
 }
 
 <section class="product-page spad">
@@ -88,7 +89,14 @@
 
             async function fetchSubjects() {
                 try {
-                    const response = await fetch(`${apiUrl}/GetAllSubjects`);
+                    var token = '@token';
+                    const response = await fetch(`${apiUrl}/GetAllSubjects`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
@@ -177,9 +185,11 @@
                         const id = form.querySelector('input[name="id"]').value;
 
                         try {
+                            var token = '@token';
                             const response = await fetch(`/ManageSubject/DeleteSubject`, {
                                 method: 'POST',
                                 headers: {
+                                    'Authorization': `Bearer ${token}`,
                                     'Content-Type': 'application/x-www-form-urlencoded',
                                 },
                                 body: new URLSearchParams({ id: id })

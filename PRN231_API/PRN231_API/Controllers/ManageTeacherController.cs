@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PRN231_API.DAO;
 using PRN231_API.DTO;
 using System.Collections.Generic;
@@ -28,7 +29,6 @@ namespace PRN231_API.Controllers
         }
 
 
-        // Get all teachers
         [HttpGet("GetAllTeachers")]
         public async Task<IActionResult> GetAllTeachers()
         {
@@ -42,6 +42,7 @@ namespace PRN231_API.Controllers
             return Ok(teachers);
         }
 
+        [Authorize("Admin")]
         [HttpPost("CreateTeacher")]
         public async Task<IActionResult> CreateTeacher([FromBody] CreateTeacherDTO createTeacherDTO)
         {
@@ -51,6 +52,8 @@ namespace PRN231_API.Controllers
             var teacher = await _teacherDAO.CreateTeacherAsync(createTeacherDTO);
             return CreatedAtAction(nameof(GetTeacherById), new { id = teacher.TeacherId }, teacher);
         }
+
+        [Authorize("Admin")]
         [HttpPut("{teacherId}/status")]
         public async Task<IActionResult> EditIsActiveTeacher(int teacherId, [FromQuery] bool isActive)
         {
@@ -63,6 +66,7 @@ namespace PRN231_API.Controllers
 
 
 
+        [Authorize("Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTeacher(int id)
         {
@@ -85,6 +89,7 @@ namespace PRN231_API.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
         }
 
+        [Authorize("Admin")]
         [HttpGet("search")]
         public async Task<IActionResult> SearchTeachersByNameAsync([FromQuery] string name)
         {
