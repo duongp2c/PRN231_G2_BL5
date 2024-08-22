@@ -47,43 +47,5 @@ namespace PRN231_API.Repository
             return student.StudentId;  // StudentId is nullable, so this is safe
         }
 
-        public async Task<Student?> GetStudentByAccountIdAsync(int id)
-        {
-            //return await _context.Students.FindAsync(studentId);
-            return await _context.Students.Where(s => s.AccountId == id).FirstOrDefaultAsync();
-        }
-
-        public async Task<List<StudentSubject>> GetStudentSubjectsByStudentIdAsync(int studentId)
-        {
-            List<StudentSubject> list = await _context.StudentSubjects
-                .Where(ss => ss.StudentId == studentId).Include("Subject")
-                .ToListAsync();
-            
-            return list;
-        }
-
-        public async Task AddStudentSubjectAsync(StudentSubject studentSubject)
-        {
-            _context.StudentSubjects.Add(studentSubject);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateStudentAsync(Student student)
-        {
-            _context.Students.Update(student);
-            await _context.SaveChangesAsync();
-        }
-        public async Task UpdateStudentDetailAsync(StudentDetail student)
-        {
-            _context.StudentDetails.Update(student);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<StudentDetail?> GetStudentDetailByIdAsync(int id)
-        {
-            return await _context.StudentDetails
-                .Where(s => s.StudentId == id)
-                .FirstOrDefaultAsync();
-        }
     }
 }
