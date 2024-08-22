@@ -1,0 +1,95 @@
+﻿@model PRN231_API.DTO.EvaluationDTO
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Edit Evaluation";
+}
+
+<h1>Edit Evaluation</h1>
+
+<!-- Display success or error messages -->
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewBag.SuccessMessage
+    </div>
+}
+else if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.ErrorMessage
+    </div>
+}
+
+<!-- Use an HTTP method override for PUT -->
+<form asp-action="UpdateEvaluation" method="post">
+    @Html.AntiForgeryToken() <!-- Add anti-forgery token for security -->
+    <!-- Hidden input fields -->
+    <input type="hidden" name="EvaluationId" value="@Model.EvaluationId" />
+    <input type="hidden" name="StudentId" value="@Model.StudentId" />
+    <input type="hidden" name="SubjectId" value="@Model.SubjectId" />
+    <input type="hidden" name="GradeTypeId" value="@Model.GradeTypeId" />
+    <!-- Hidden field to simulate PUT method -->
+    <input type="hidden" name="_method" value="PUT" />
+
+    <!-- Form fields -->
+    <div class="form-group">
+        <label for="Grade">Grade</label>
+        <input type="number" class="form-control" id="Grade" name="Grade" value="@Model.Grade" required />
+    </div>
+    <div class="form-group">
+        <label for="AdditionExplanation">Additional Explanation</label>
+        <textarea class="form-control" id="AdditionExplanation" name="AdditionExplanation" rows="3">@Model.AdditionExplanation</textarea>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="StudentEvaluations" asp-route-studentId="@Model.StudentId" class="btn btn-secondary">Cancel</a>
+</form>
+
+<style>
+    body {
+        background: linear-gradient(to right, #ff7e5f, #feb47b); /* Background gradient */
+        color: #333;
+        font-family: Arial, sans-serif;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+        .form-control:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+    .btn {
+        background: linear-gradient(to right, #36d1dc, #5b86e5); /* Button gradient */
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+        .btn:hover {
+            background: linear-gradient(to right, #5b86e5, #36d1dc);
+        }
+
+    .alert {
+        margin-bottom: 20px;
+    }
+</style>

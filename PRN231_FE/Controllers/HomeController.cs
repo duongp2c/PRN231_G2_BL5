@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PRN231_FE.Models;
+
 using System.Diagnostics;
 
 namespace PRN231_FE.Controllers
@@ -23,10 +23,7 @@ namespace PRN231_FE.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+       
+       
     }
 }

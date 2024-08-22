@@ -32,6 +32,7 @@ namespace PRN231_API.Models
 
                 optionsBuilder.UseSqlServer("DefaultConnection");
             }
+            optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

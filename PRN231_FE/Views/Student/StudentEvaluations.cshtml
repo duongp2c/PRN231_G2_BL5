@@ -1,0 +1,48 @@
+﻿@model IEnumerable<PRN231_API.DTO.EvaluationDTO>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Student Evaluations";
+}
+
+<h1>Student Evaluations</h1>
+
+@if (Model.Any())
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>SubjectID</th>
+                <th>Subject</th>
+                <th>Grade Type</th>
+                <th>Grade</th>
+                <th>Additional Explanation</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var evaluation in Model)
+            {
+                <tr>
+                    <td>@evaluation.SubjectId</td>
+                    <td>@evaluation.SubjectName</td>
+                    <td>@evaluation.GradeTypeName</td>
+                    <td>@evaluation.Grade</td>
+                    <td>@evaluation.AdditionExplanation</td>
+                    <td>
+                        <a asp-action="EditEvaluation"
+                           asp-route-evaluationId="@evaluation.EvaluationId"
+                           asp-route-studentId="@evaluation.StudentId"
+                           asp-route-subjectId="@evaluation.SubjectId"
+                           asp-route-gradeTypeId="@evaluation.GradeTypeId"
+                           class="btn btn-primary">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No evaluations found for this student.</p>
+}
