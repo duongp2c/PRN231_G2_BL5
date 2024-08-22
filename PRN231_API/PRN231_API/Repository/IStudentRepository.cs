@@ -1,4 +1,5 @@
-﻿using PRN231_API.DTO;
+
+using PRN231_API.DTO;
 using PRN231_API.Models;
 
 namespace PRN231_API.Repository
@@ -12,5 +13,12 @@ namespace PRN231_API.Repository
         Task<bool> EditActiveStudentAsync(int studentId, bool isActive);
         Task<string> DeleteStudentAsync(int studentId);
         Task<List<StudentDTO>> SearchStudentsByNameAsync(string name);
+        Task<Student?> GetStudentByAccountIdAsync(int studentId); // hàm này của quốc
+        Task<StudentDetail?> GetStudentDetailByIdAsync(int studentId);
+        Task<List<StudentSubject>> GetStudentSubjectsByStudentIdAsync(int studentId);
+        Task UpdateStudentAsync(Student student);
+        Task UpdateStudentDetailAsync(StudentDetail student);
+        //--------------------------------------------------------------------
+        Task<int?> GetStudentIdByAccountIdAsync(int accountId);
     }
 }

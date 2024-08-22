@@ -1,0 +1,84 @@
+﻿@*
+   
+*@
+@{
+}
+
+<div style="width: 50%; margin: auto;" class="card login-form">
+    <div class="card-body">
+        <h3 class="card-title text-center">Reset password</h3>
+
+        <div class="card-text">
+            <form id="reset-password-form">
+                <div class="form-group">
+                    <label for="emailInput">Enter your email address and we will send you a link to reset your password.</label>
+                    <input type="email" id="emailInput" class="form-control form-control-sm" placeholder="Enter your email address" required>
+                </div>
+
+                <button id="sendEmailButton" style="margin-top: 10px;" type="submit" class="btn btn-primary btn-block">Send email</button>
+            </form>
+
+            <!-- Alert Messages -->
+            <div id="alertMessage" style="margin-top: 15px;" class="alert" role="alert" style="display:none;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('reset-password-form').addEventListener('submit', async function (event) {
+        event.preventDefault(); // Prevent default form submission behavior
+
+        const email = document.getElementById('emailInput').value;
+        const sendEmailButton = document.getElementById('sendEmailButton');
+        const alertMessage = document.getElementById('alertMessage');
+
+        try {
+            const response = await fetch('http://localhost:5000/api/Account/request-password-reset', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email })
+            });
+
+            if (response.ok) {
+                alertMessage.textContent = "Password reset link sent.";
+                alertMessage.classList.remove('alert-danger');
+                alertMessage.classList.add('alert-success');
+                startCooldown(sendEmailButton, 30); // Start cooldown for 30 seconds
+            } else {
+                alertMessage.textContent = "Email not found.";
+                alertMessage.classList.remove('alert-success');
+                alertMessage.classList.add('alert-danger');
+            }
+
+            alertMessage.style.display = 'block';
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    function startCooldown(button, cooldownTime) {
+        // Disable the button
+        button.disabled = true;
+        let remainingTime = cooldownTime;
+
+        const originalText = button.textContent;
+        button.textContent = `Send email (${remainingTime}s)`;
+
+        const countdown = setInterval(() => {
+            remainingTime--;
+            button.textContent = `Send email (${remainingTime}s)`;
+
+            // Re-enable the button after cooldown
+            if (remainingTime <= 0) {
+                clearInterval(countdown);
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        }, 1000); // Update the countdown every second
+    }
+</script>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>

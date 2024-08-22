@@ -1,32 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PRN231_FE.Models;
-using System.Diagnostics;
 
 namespace PRN231_FE.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
         public IActionResult Index()
         {
-            return View();
-        }
+            var accountId = HttpContext.Session.GetString("AccountId");
+            ViewBag.AccountId = accountId;
 
-        public IActionResult Privacy()
-        {
-            return View();
+            return View("Views/Home/Index1.cshtml");
         }
+       
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }

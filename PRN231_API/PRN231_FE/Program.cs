@@ -1,10 +1,27 @@
 using PRN231_API.DAO;
+using PRN231_FE.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient();
+builder.Services.AddAuthentication();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+builder.Services.AddHttpClient<AccountController>();
+
+builder.Services.AddHttpClient<ProfileController>();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+});
 
 var app = builder.Build();
 
@@ -16,15 +33,18 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
-app.UseHttpsRedirection();
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=ManageGrade}/{action=Index}/{id?}");
+
+
+app.UseSession();
+
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllers(); // Ensure this line is present
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Account}/{action=Login}/{id?}");
 });
+
 
 app.Run();

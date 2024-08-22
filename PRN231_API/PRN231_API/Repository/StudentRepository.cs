@@ -37,6 +37,7 @@ namespace PRN231_API.Repository
             await _context.SaveChangesAsync();
         }
 
+
         public async Task<List<StudentDTO>> GetAllStudentAsync()
         {
             var students = await _context.Students
@@ -128,6 +129,25 @@ namespace PRN231_API.Repository
             return _mapper.Map<List<StudentDTO>>(students);
         }
 
+
+
+        public async Task UpdateStudentAsync(Student student)
+        {
+            _context.Students.Update(student);
+            await _context.SaveChangesAsync();
+        }
+        public async Task UpdateStudentDetailAsync(StudentDetail student)
+        {
+            _context.StudentDetails.Update(student);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<StudentDetail?> GetStudentDetailByIdAsync(int id)
+        {
+            return await _context.StudentDetails
+                .Where(s => s.StudentId == id)
+                .FirstOrDefaultAsync();
+        }
 
     }
 }

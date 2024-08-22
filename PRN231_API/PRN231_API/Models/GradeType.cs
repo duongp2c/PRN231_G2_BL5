@@ -1,4 +1,5 @@
-﻿using System;
+
+using System;
 using System.Collections.Generic;
 
 namespace PRN231_API.Models
@@ -12,7 +13,6 @@ namespace PRN231_API.Models
 
         public int GradeTypeId { get; set; }
         public string GradeTypeName { get; set; } = null!;
-
         public virtual ICollection<Evaluation> Evaluations { get; set; }
     }
 }

@@ -1,8 +1,28 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+<script>
+    function getStudentDetail() {
+        let result = fetch("http://localhost:5231/api/Student/profile/1")
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(err => console.error(err));
+        //document.getElementById('name').innerHTML = result.name;
+        //document.getElementById('age').innerHTML = result.age;
+        console.log(result);
+
+    }
+    getStudentDetail();
+</script>
+<body onload="getStudentDetail()">
+    <input type="text" id="name" placeholder="Student Name"></input>
+    <input type="text" id="age" placeholder="Student Age"></input>
+</body>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
