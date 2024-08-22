@@ -51,38 +51,5 @@ namespace PRN231_API.Repository
             return student.StudentId;  // StudentId is nullable, so this is safe
         }
 
-        public Task<Student?> GetStudentByAccountIdAsync(int studentId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<StudentDetail?> GetStudentDetailByIdAsync(int studentId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<StudentSubject>> GetStudentSubjectsByStudentIdAsync(int studentId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateStudentAsync(Student student)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateStudentDetailAsync(StudentDetail student)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task AddStudentSubjectAsync(StudentSubject studentSubject)
-        {
-            throw new NotImplementedException();
-        }
-        //public Task<Student?> GetStudentImagesByAccountID(int accountId)
-        //{
-            
-        //}
     }
 }
