@@ -14,6 +14,25 @@ namespace PRN231_API.Controllers
         {
             _studentDao = studentDao;
         }
+        [Authorize(Roles ="Student")]
+        [HttpGet("profile/{id}")]
+        public async Task<ActionResult<ProfileDTO>> GetProfile(int id)
+        {
+            var profile = await _studentDao.GetStudentDetailAsync(id);
+            return Ok(profile);
+        }
+
+        [HttpPost("update/{id}")]
+        public async Task<IActionResult> UpdateProfile([FromForm] ProfileDTO profile ,int id)
+        {
+            var result = await _studentDao.UpdateStudentDetailAsync(profile,id);
+            if (result == "Update success")
+                return Ok(result);
+            else
+                return BadRequest(result);
+        }
+
+        [Authorize(Roles ="Student")]
         [Authorize("Student")]
         [HttpPost("register/{accountId}/{subjectId}")]
         public async Task<IActionResult> RegisterSubject(int subjectId, int accountId)
