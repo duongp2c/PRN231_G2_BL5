@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PRN231_FE.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace PRN231_FE.Controllers
@@ -22,27 +24,46 @@ namespace PRN231_FE.Controllers
             {
                 // Retrieve AccountId from the session
                 var accountId = HttpContext.Session.GetString("AccountId");
+
                 // Check if AccountId is null, if so, return a login alert
                 if (string.IsNullOrEmpty(accountId))
                 {
                     TempData["AlertMessage"] = "Bạn cần đăng nhập để tiếp tục.";
                     return RedirectToAction("Login", "Account");
                 }
+
                 // Retrieve the token from the session
                 var token = HttpContext.Session.GetString("AuthToken");
 
                 // Set the authorization header for the HttpClient
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
+                // Decode JWT Token to extract Role
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
+
+                // Extract the Role claim
+                var role = jwtToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)?.Value;
+
+                // Check if the user has the appropriate role (for example, "Student")
+                if (role != "Student")
+                {
+                    TempData["ErrorMessage"] = "Bạn không có quyền truy cập trang này.";
+                    return RedirectToAction("Error", "Unauthorized"); // Redirect to unauthorized page
+                }
+
                 // Call the API to get the subject data
                 var subjects = await _httpClient.GetFromJsonAsync<List<SubjectViewModel>>("http://localhost:5000/api/Subject/GetSubjectIdAndName");
 
                 // Call the API to get the subjects the student is currently enrolled in
                 var subjectOfAccount = await _httpClient.GetFromJsonAsync<List<SubjectOfAccount>>($"http://localhost:5000/api/Subject/student/{accountId}");
-                if(subjectOfAccount == null)
+
+                // Handle null subjectOfAccount
+                if (subjectOfAccount == null)
                 {
                     ViewBag.SubjectOfAccount = null;
                 }
+
                 // Pass the data and AccountId to the view
                 ViewBag.AccountId = accountId;
                 ViewBag.SubjectOfAccount = subjectOfAccount;
@@ -51,7 +72,6 @@ namespace PRN231_FE.Controllers
             catch (Exception ex)
             {
                 // Handle any errors by logging and returning an empty list or an error message
-                // You can log the exception message for debugging
                 Console.WriteLine(ex.Message);
                 return View(new List<SubjectViewModel>());
             }
@@ -109,3 +129,4 @@ namespace PRN231_FE.Controllers
 
     }
 }
+
