@@ -35,7 +35,6 @@ namespace PRN231_FE.Controllers
 
             }
         }
-        //http://localhost:5139/StudentGrade/CheckGrade/1
         [HttpGet]
         [ActionName("CheckGrade")]
         public async Task<IActionResult> CheckGrade(string id)
