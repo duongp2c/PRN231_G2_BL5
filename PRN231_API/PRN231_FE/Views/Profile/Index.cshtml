@@ -5,29 +5,50 @@
 }
 <body>
     <img src=@ViewData["image"] alt="no image" style="width:128px;height:128px;">
+
+    {
     <form asp-action="Update" method="post">
         <div class="form-group">
-            <input type="text" id='name' name="name" value="@ViewData["name"]" placeholder="name" class="form-control">
-        </div></br>
+            <label>
+                Name <span>(required!)</span>
+            </label>
+            <input type="text" id='name' name="name" value="@ViewData["name"]" placeholder="name" class="form-control" required>
+        </div>
+        </br>
         <div class="form-group">
-            <input type="text" id='age' name="age" value="@ViewData["age"]" placeholder="age" class="form-control">
-        </div></br>
+            <label>
+                Name <span>(required!)</span>
+            </label>
+            <input type="number" id='age' name="age" value="@ViewData["age"]" placeholder="age" class="form-control" required id="val">
+        </div>
+        </br>
         <div class="form-group">
             <input type="text" id='address' name="address" value="@ViewData["address"]" placeholder="address" class="form-control">
-        </div></br>
+        </div>
+        </br>
         <div class="form-group">
             <input type="text" id='additionalInfo' name="additionalInfo" value="@ViewData["additionalInfo"]" placeholder="additionalInfo" class="form-control">
-        </div></br>
+        </div>
+        </br>
         <div class="form-group">
             <input type="text" id='phone' name="phone" value="@ViewData["phone"]" placeholder="phone" class="form-control">
-        </div></br>
+        </div>
+        </br>
         <div class="form-group">
             <input type="text" id='image' name="image" value="@ViewData["image"]" placeholder="image" class="form-control">
-        </div></br>
+        </div>
+        </br>
         <button type="submit" class="btn btn-primary">Update</button>
+
     </form>
-    
+
 </body>
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+</script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js">
+</script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js">
+</script>

@@ -14,13 +14,11 @@
         @foreach (SubjectDTO s in subjects)
         {
             <tr>
-
                 <td>@s.subjectId</td>
                 <td>@s.name</td>
                 <td>
                     <div>
-                        <a asp-controller="StudentGrade" asp-action="CheckGrade" asp-route-id="@s.subjectId" title="Edit">Check Grade</a>
-                        
+                        <a asp-controller="StudentGrade" asp-action="CheckGrade" asp-route-id="@s.subjectId" title="Edit">Check Grade</a>                        
                     </div>
                 </td>
             </tr>

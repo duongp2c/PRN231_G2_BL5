@@ -14,7 +14,6 @@ namespace PRN231_API.Repository
             _context = context;
 
         }
-
         
         public async Task<Student?> GetStudentByIdAsync(int studentId)
         {
