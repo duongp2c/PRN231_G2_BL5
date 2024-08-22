@@ -59,7 +59,7 @@
                         <th>Address</th>
                         <th>Phone</th>
                         <th>Email</th>
-                        <th>Image</th>
+                        
                         <th>Status</th>
                         <th>Subjects</th>
                         <th>Action</th>
@@ -123,9 +123,7 @@
                                     <td>${student.address}</td>
                                     <td>${student.phone}</td>
                                     <td>${student.email}</td>
-                                    <td>
-                                        <img src="${student.image}" alt="Student Image" style="max-width: 100px;" />
-                                    </td>
+                                    
                                     <td>
                                         <form action="/ManageStudent/UpdateStudentStatus" method="post">
                                             <input type="hidden" name="id" value="${student.studentId}" />
