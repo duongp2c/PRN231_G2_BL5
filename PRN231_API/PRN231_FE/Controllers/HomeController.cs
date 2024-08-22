@@ -7,7 +7,7 @@ namespace PRN231_FE.Controllers
         public IActionResult Index()
         {
             var accountId = HttpContext.Session.GetString("AccountId");
-            Console.WriteLine(accountId);
+            ViewBag.AccountId = accountId;
 
             return View("Views/Home/Index1.cshtml");
         }

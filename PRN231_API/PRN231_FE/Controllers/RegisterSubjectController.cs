@@ -22,7 +22,12 @@ namespace PRN231_FE.Controllers
             {
                 // Retrieve AccountId from the session
                 var accountId = HttpContext.Session.GetString("AccountId");
-
+                // Check if AccountId is null, if so, return a login alert
+                if (string.IsNullOrEmpty(accountId))
+                {
+                    TempData["AlertMessage"] = "Bạn cần đăng nhập để tiếp tục.";
+                    return RedirectToAction("Login", "Account");
+                }
                 // Retrieve the token from the session
                 var token = HttpContext.Session.GetString("AuthToken");
 
@@ -79,23 +84,25 @@ namespace PRN231_FE.Controllers
                 // Call the API to register the subject
                 var response = await _httpClient.SendAsync(requestMessage);
 
+                // Extract response content as string
+                var responseContent = await response.Content.ReadAsStringAsync();
+
                 if (response.IsSuccessStatusCode)
                 {
-                    // Redirect to RegisterSubject view with success message
-                    TempData["SuccessMessage"] = "Registration successful!";
+                    // Redirect to RegisterSubject view with the API's success message
+                    TempData["SuccessMessage"] = responseContent; // Pass the success message from the API
                     return RedirectToAction("RegisterSubject");
                 }
                 else
                 {
-                    // Set error message to be shown in the view
-                    TempData["ErrorMessage"] = "Failed to register the subject.";
+                    // Set error message with the API's error message
+                    TempData["ErrorMessage"] = responseContent; // Pass the error message from the API
                     return RedirectToAction("RegisterSubject");
                 }
             }
-            catch
-            {
-                // Handle any errors and set error message
-                TempData["ErrorMessage"] = "An error occurred while registering the subject.";
+            catch(Exception ex)
+            {// Handle any errors and set a generic error message
+                TempData["ErrorMessage"] = "An error occurred: " + ex.Message;
                 return RedirectToAction("RegisterSubject");
             }
         }
