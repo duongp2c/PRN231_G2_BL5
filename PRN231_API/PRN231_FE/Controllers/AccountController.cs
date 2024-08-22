@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using PRN231_FE.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 
 namespace PRN231_FE.Controllers
 {
@@ -39,8 +41,11 @@ namespace PRN231_FE.Controllers
                 {
                     return RedirectToAction("Activate", "Account");
                 }
-
-                ModelState.AddModelError(string.Empty, "Registration failed.");
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Email already registered.");
+                    return View(model);
+                }
             }
 
             return View(model);
@@ -54,34 +59,50 @@ namespace PRN231_FE.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var jsonContent = JsonConvert.SerializeObject(model);
-                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync("http://localhost:5000/api/Account/login", content);
-
-                if (response.IsSuccessStatusCode)
+                if (ModelState.IsValid)
                 {
-                    var jsonResponse = await response.Content.ReadAsStringAsync();
-                    var loginResponse = JsonConvert.DeserializeObject<TokenModel>(jsonResponse);
-                    string token = loginResponse.AccessToken;
+                    var jsonContent = JsonConvert.SerializeObject(model);
+                    var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                    var response = await _httpClient.PostAsync("http://localhost:5000/api/Account/login", content);
 
-                    var handler = new JwtSecurityTokenHandler();
-                    var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
-                    var accountId = jsonToken.Claims.First(claim => claim.Type == "UserID").Value;
-                    var role = jsonToken.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
-                    HttpContext.Session.SetString("AuthToken", token);
-                    HttpContext.Session.SetString("Role", role);
-                    // Save the AccountId to the session
-                    HttpContext.Session.SetString("AccountId", accountId);
-                    // Store the token in a cookie or session
-                    return RedirectToAction("Index", "Home");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var jsonResponse = await response.Content.ReadAsStringAsync();
+                        var loginResponse = JsonConvert.DeserializeObject<TokenModel>(jsonResponse);
+                        string token = loginResponse.AccessToken;
+
+                        var handler = new JwtSecurityTokenHandler();
+                        var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+                        var accountId = jsonToken.Claims.First(claim => claim.Type == "UserID").Value;
+                        var role = jsonToken.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+                        HttpContext.Session.SetString("AuthToken", token);
+                        HttpContext.Session.SetString("Role", role);
+                        // Save the AccountId to the session
+                        HttpContext.Session.SetString("AccountId", accountId);
+                        // Store the token in a cookie or session
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        var responseBody = await response.Content.ReadAsStringAsync();
+                        var errorResponse = JsonConvert.DeserializeObject<dynamic>(responseBody);
+
+                        ModelState.AddModelError(string.Empty, (string)errorResponse.message);
+                        return View(model);
+                    }
+
+                    ModelState.AddModelError(string.Empty, "Login failed.");
                 }
 
-                ModelState.AddModelError(string.Empty, "Login failed.");
+                return View(model);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
 
-            return View(model);
         }
 
         public IActionResult Activate()
@@ -108,6 +129,24 @@ namespace PRN231_FE.Controllers
             }
 
             return View(model);
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            // Clear session
+            HttpContext.Session.Clear();
+
+            // Clear cache
+            Response.Headers["Cache-Control"] = "no-cache, no-store";
+            Response.Headers["Expires"] = DateTime.UtcNow.ToString("R");
+
+            // Clear cookies
+            foreach (var cookie in Request.Cookies.Keys)
+            {
+                Response.Cookies.Delete(cookie);
+            }
+
+            return RedirectToAction("Login", "Account");
         }
     }
 

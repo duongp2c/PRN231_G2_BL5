@@ -10,6 +10,7 @@ using PRN231_API.DTO;
 using PRN231_API.Models;
 using PRN231_API.Repository;
 using PRN231_API.ViewModel;
+using Microsoft.AspNetCore.Identity;
 
 namespace PRN231_API.Controllers
 {
@@ -57,12 +58,28 @@ namespace PRN231_API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(AccountRegisterDto userDto)
         {
+            var existingUser = await _accountDao.GetAccountByEmailAsync(userDto.Email);
+
+            if (existingUser != null)
+            {
+                return BadRequest(new { message = "Email already in use." });
+            }
             return Ok(_accountService.RegisterAccount(userDto));
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<TokenModel>> Login(AccountLoginDto userDto)
         {
+            var notExistingUser = await _accountDao.GetAccountByEmailAsync(userDto.Email);
+            var existingUser = await _accountDao.GetAccountByEmailAndPasswordAsync(userDto);
+
+            if (notExistingUser == null)
+            {
+                return BadRequest(new { message = "You do not register yet!" });
+            }else if(existingUser == null)
+            {
+                return BadRequest(new { message = "Wrong email or passord!" });
+            }
             return await _accountService.LoginAccount(userDto, HttpContext);
         }
 
@@ -87,5 +104,6 @@ namespace PRN231_API.Controllers
                 return BadRequest();
             }
         }
+
     }
 }
