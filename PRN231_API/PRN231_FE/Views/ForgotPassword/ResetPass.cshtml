@@ -21,8 +21,9 @@
                 <input type="hidden" id="token" value="@token" />
 
                 <button style="margin-top: 10px;" type="submit" class="btn btn-primary btn-block">Reset Password</button>
+                <a href="/Account/Login" class ="btn btn-primary btn-block"></a>
             </form>
-
+            
             <!-- Alert Messages -->
             <div id="alertMessage" style="margin-top: 15px;" class="alert" role="alert" style="display:none;"></div>
         </div>
@@ -56,6 +57,9 @@
                 alertMessage.textContent = "Password reset successful.";
                 alertMessage.classList.remove('alert-danger');
                 alertMessage.classList.add('alert-success');
+                setTimeout(() => {
+                    window.location.href = '/Account/Login';
+                }, 1000)
             } else {
                 alertMessage.textContent = "Failed to reset password. Please try again.";
                 alertMessage.classList.remove('alert-success');
