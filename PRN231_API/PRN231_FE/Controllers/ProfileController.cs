@@ -4,6 +4,8 @@ using PRN231_FE.Models;
 using System.Text;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Reflection;
 
 namespace PRN231_FE.Controllers
 {
@@ -20,6 +22,7 @@ namespace PRN231_FE.Controllers
             if (ModelState.IsValid)
             {
                 var accountId = HttpContext.Session.GetString("AccountId");
+                ViewBag.AccountId = accountId;
                 var token = HttpContext.Session.GetString("AuthToken");
                 if (string.IsNullOrEmpty(token))
                 {
@@ -59,12 +62,12 @@ namespace PRN231_FE.Controllers
 
                 }
             }
-            
+
             return View();
         }
         [HttpPost]
-        [ActionName("Update")]
-        public async Task<IActionResult> Update()
+        [ActionName("Index")]
+        public async Task<IActionResult> Index(ProfileDTO p)
         {
             var name = Request.Form["name"].ToString().Trim();
             //var age = int.Parse(Request.Form["age"]);
@@ -75,18 +78,25 @@ namespace PRN231_FE.Controllers
             var image = Request.Form["image"].ToString().Trim();
             if (ModelState.IsValid)
             {
+                
                 Dictionary<string,string> formData = new Dictionary<string,string>();
-                formData["name"] = name;
-                formData["address"] = address;
-                formData["age"] = age;
-                formData["additionalInfo"] = additionalInfo;
-                formData["phone"] = phone;
-                formData["image"] = image;
+                formData["name"] = p.name;
+                formData["address"] = p.address;
+                formData["age"] = p.age.ToString();
+                formData["additionalInfo"] = p.additionalInfo;
+                formData["phone"] = p.phone;
+                formData["image"] = p.image;
                 HttpContent formContent = new FormUrlEncodedContent(formData);
                 var accountId = HttpContext.Session.GetString("AccountId");
                 var response = await _httpClient.PostAsync("http://localhost:5000/api/Student/update/"+accountId, formContent);
             }
-            return RedirectToAction("Index", "Profile");
+            else
+            {
+                TempData["ErrorMessage"] = "Update Failed";
+                return View(p);
+            }
+            TempData["SuccessMessage"] = "Update Success";
+            return View(p);
         }
     }
 }
