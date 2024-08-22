@@ -21,5 +21,6 @@ namespace PRN231_API.Repository
         Task<bool> EditActiveStudentAsync(int studentId, bool isActive);
         Task<string> DeleteStudentAsync(int studentId);
         Task<List<StudentDTO>> SearchStudentsByNameAsync(string name);
+        //Task<Student?> GetStudentImagesByAccountID(int accountId);
     }
 }
