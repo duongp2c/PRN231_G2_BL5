@@ -70,7 +70,7 @@
                     Password: $('#Password').val(),
                     IsActive: true // Assuming the teacher is active by default
                 };
-                if (!formData.TeacherName || !formData.Email || !formData.Password {
+                if (!formData.TeacherName || !formData.Email || !formData.Password) {
                     alert('Vui lòng nhập đầy đủ thông tin.');
                     return; // Dừng lại nếu thông tin chưa đầy đủ
                 }
@@ -93,7 +93,7 @@
                     url: 'http://localhost:5000/api/ManageTeacher/CreateTeacher',
                     type: 'POST',
                     headers: {
-                        'Authorization': 'Bearer ' + token
+                        'Authorization': 'Bearer ' + token,
                     },
                     contentType: 'application/json',
                     data: JSON.stringify(formData),
