@@ -1,9 +1,17 @@
 ﻿@model ActivateViewModel
 
-<h2>Activate Your Account</h2>
-<h2>Please check your mail to get active code!</h2>
 
-<form asp-action="Activate" method="post">
+<div class="container">
+
+
+
+<form style="width: 50%;
+    margin: auto;
+    padding-top: 200px;" asp-action="Activate" method="post">
+        <div style="font-weight: 900;" class="text-center">
+            <h2 >Activate Your Account</h2>
+            <h2>Please check your mail to get active code!</h2>
+        </div>
     <div class="form-group">
         <label asp-for="Email"></label>
         <input asp-for="Email" class="form-control" />
@@ -14,5 +22,14 @@
         <input asp-for="ActivationCode" class="form-control" />
         <span asp-validation-for="ActivationCode" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Activate</button>
+    <div class="d-flex mt-3">
+        <button type="submit" class="m-auto btn btn-primary">Activate</button>
+    </div>
+
 </form>
+<div id="responseMessage" class="mt-3"></div>
+</div>
+
+
+
+
