@@ -17,6 +17,7 @@ namespace PRN231_API.Controllers
         {
             _studentDao = studentDao;
         }
+        [Authorize(Roles ="Student")]
         [HttpGet("profile/{id}")]
         public async Task<ActionResult<ProfileDTO>> GetProfile(int id)
         {

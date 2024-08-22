@@ -24,7 +24,6 @@ namespace PRN231_FE.Controllers
             {
                 // Retrieve AccountId from the session
                 var accountId = HttpContext.Session.GetString("AccountId");
-
                 // Check if AccountId is null, if so, return a login alert
                 if (string.IsNullOrEmpty(accountId))
                 {
@@ -35,22 +34,26 @@ namespace PRN231_FE.Controllers
                 // Retrieve the token from the session
                 var token = HttpContext.Session.GetString("AuthToken");
 
+                if (string.IsNullOrEmpty(token))
+                {
+                    TempData["AlertMessage"] = "Token không hợp lệ.";
+                    return RedirectToAction("Login", "Account");
+                }
+
+                // Validate role from the token
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(token);
+
+                var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+
+                // Check if the user has the "Student" role
+                if (roleClaim != "Student")
+                {
+                    return RedirectToAction("Error", "Unauthorized");
+                }
+
                 // Set the authorization header for the HttpClient
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-                // Decode JWT Token to extract Role
-                var handler = new JwtSecurityTokenHandler();
-                var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
-
-                // Extract the Role claim
-                var role = jwtToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)?.Value;
-
-                // Check if the user has the appropriate role (for example, "Student")
-                if (role != "Student")
-                {
-                    TempData["ErrorMessage"] = "Bạn không có quyền truy cập trang này.";
-                    return RedirectToAction("Error", "Unauthorized"); // Redirect to unauthorized page
-                }
 
                 // Call the API to get the subject data
                 var subjects = await _httpClient.GetFromJsonAsync<List<SubjectViewModel>>("http://localhost:5000/api/Subject/GetSubjectIdAndName");
@@ -58,7 +61,7 @@ namespace PRN231_FE.Controllers
                 // Call the API to get the subjects the student is currently enrolled in
                 var subjectOfAccount = await _httpClient.GetFromJsonAsync<List<SubjectOfAccount>>($"http://localhost:5000/api/Subject/student/{accountId}");
 
-                // Handle null subjectOfAccount
+                // Check if there are no subjects
                 if (subjectOfAccount == null)
                 {
                     ViewBag.SubjectOfAccount = null;
@@ -67,6 +70,7 @@ namespace PRN231_FE.Controllers
                 // Pass the data and AccountId to the view
                 ViewBag.AccountId = accountId;
                 ViewBag.SubjectOfAccount = subjectOfAccount;
+
                 return View(subjects);
             }
             catch (Exception ex)
