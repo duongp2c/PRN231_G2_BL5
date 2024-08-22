@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PRN231_API.DAO;
 using PRN231_API.DTO;
 
@@ -15,8 +16,8 @@ namespace PRN231_API.Controllers
             _manageGradeTypeDAO = manageGradeTypeDAO;
         }
 
-       
 
+        [Authorize("Teacher, Admin")]
         [HttpGet("{gradeTypeId}")]
         public async Task<IActionResult> GetGradeTypeById(int gradeTypeId)
         {
@@ -27,6 +28,8 @@ namespace PRN231_API.Controllers
             return Ok(gradeType);
         }
 
+
+        [Authorize("Teacher, Admin")]
         [HttpGet("GetAllGradeTypes")]
         public async Task<IActionResult> GetAllGradeTypes()
         {
@@ -48,6 +51,7 @@ namespace PRN231_API.Controllers
             }
         }
 
+        [Authorize("Admin")]
         [HttpPost("CreateGradeType")]
         public async Task<IActionResult> CreateGradeType([FromBody] CreateGradeTypeDTO createGradeTypeDTO)
         {
@@ -66,6 +70,7 @@ namespace PRN231_API.Controllers
             }
         }
 
+        [Authorize("Admin")]
         [HttpDelete("{gradetypeId}")]
         public async Task<IActionResult> DeleteGradeType(int gradetypeId)
         {

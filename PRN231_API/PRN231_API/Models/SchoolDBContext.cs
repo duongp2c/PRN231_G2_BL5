@@ -85,8 +85,6 @@ namespace PRN231_API.Models
                 entity.Property(e => e.GradeTypeName)
                     .IsRequired()
                     .HasMaxLength(100);
-
-                entity.Property(e => e.GradeTypeWeight).HasColumnType("decimal(5, 2)");
             });
 
             modelBuilder.Entity<Student>(entity =>

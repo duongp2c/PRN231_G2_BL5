@@ -25,7 +25,7 @@ namespace PRN231_FE.Controllers
         public async Task<IActionResult> DeleteSubject(int id)
         {
             var httpClient = _httpClientFactory.CreateClient();
-            var url = $"http://localhost:5231/api/ManageSubject/{id}";
+            var url = $"http://localhost:5000/api/ManageSubject/{id}";
 
             var response = await httpClient.DeleteAsync(url);
 

@@ -14,8 +14,7 @@ using StackExchange.Redis;
 using System.Security.Claims;
 using System.Text;
 using static Org.BouncyCastle.Math.EC.ECCurve;
-
-
+using PRN231_API;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +25,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddTransient<IJwtTokenService, JwtTokenService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpContextAccessor();
 // Đăng ký AutoMapper với cấu hình MappingConfig
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddCors(opts =>
@@ -37,7 +37,7 @@ builder.Services.AddControllers().AddOData(option => option.Select().Filter().Co
           .AddRouteComponents("odata", GetEdmModel()));
 
 builder.Services.AddDbContext<SchoolDBContext>(options =>
-       options.UseSqlServer(builder.Configuration.GetConnectionString("MyDB")));
+       options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<SchoolDBContext>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
 builder.Services.AddScoped<ManageTeacherDAO>();
@@ -49,20 +49,6 @@ builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 builder.Services.AddScoped<ManageSubjectDAO>();
 builder.Services.AddScoped<IManageGradeTypeRepository, ManageGradeTypeRepository>();
 builder.Services.AddScoped<ManageGradeTypeDAO>();
-
-//builder.Services.AddControllers().AddJsonOptions(x =>
-//   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
-builder.Services.AddCors(opts =>
-{
-    opts.AddPolicy("CORSPolicy", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed((host) => true));
-});
-
-
-builder.Services.AddControllers().AddOData(option => option.Select().Filter().Count().OrderBy().Expand().SetMaxTop(100)
-          .AddRouteComponents("odata", GetEdmModel()));
-
-builder.Services.AddDbContext<SchoolDBContext>(options =>
-       options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<SchoolDBContext>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<AccountDAO>();
@@ -74,7 +60,11 @@ builder.Services.AddScoped<SubjectDAO>();
 builder.Services.AddScoped<EmailDAO>();
 builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddScoped<IAccountService, AccountDAO>();
-builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+
+builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped<StudentDAO>();
+builder.Services.AddScoped<IEvaluationRepository, EvaluationRepository>();
+builder.Services.AddScoped<EvaluationDAO>();
 
 builder.Services.AddDistributedMemoryCache();
 
@@ -96,6 +86,14 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     var configuration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis"));
     return ConnectionMultiplexer.Connect(configuration);
 });
+
+IEdmModel GetEdmModel()
+{
+    ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+    builder.EntitySet<Account>("AccountsOdata");
+    builder.EntitySet<Student>("Students");
+    return builder.GetEdmModel();
+}
 
 
 builder.Services.AddSwaggerGen(options =>
@@ -154,13 +152,8 @@ builder.Services.AddAuthorization(x =>
 });
 
 
-builder.Services.AddDbContext<SchoolDBContext>(options =>
-       options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<SchoolDBContext>();
-builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-builder.Services.AddScoped<StudentDAO>();
-builder.Services.AddScoped<IEvaluationRepository, EvaluationRepository>();
-builder.Services.AddScoped<EvaluationDAO>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -184,10 +177,3 @@ app.MapControllers();
 
 
 app.Run();
-IEdmModel GetEdmModel()
-{
-    ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
-    builder.EntitySet<Account>("AccountsOdata");
-    builder.EntitySet<Student>("Students");
-    return builder.GetEdmModel();
-}

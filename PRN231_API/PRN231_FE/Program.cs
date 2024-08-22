@@ -1,4 +1,3 @@
-using PRN231_API.DAO;
 using PRN231_FE.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +34,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 
 app.UseSession();

@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PRN231_API\PRN231_API.csproj" />
 
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 

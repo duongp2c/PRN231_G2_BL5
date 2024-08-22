@@ -129,7 +129,38 @@ namespace PRN231_API.Repository
             return _mapper.Map<List<StudentDTO>>(students);
         }
 
+        public async Task<int?> GetStudentIdByAccountIdAsync(int accountId)
+        {
 
+            // Retrieve the student while considering the possibility of null values
+            var student = await _context.Students
+                                        .Where(x => x.AccountId == accountId)
+                                        .FirstOrDefaultAsync();
+
+            // Check if student is null
+            if (student == null)
+            {
+                return null;  // Return null if the student was not found
+            }
+
+            // If found, return the StudentId
+            return student.StudentId;  // StudentId is nullable, so this is safe
+        }
+
+        public async Task<Student?> GetStudentByAccountIdAsync(int id)
+        {
+            //return await _context.Students.FindAsync(studentId);
+            return await _context.Students.Where(s => s.AccountId == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<List<StudentSubject>> GetStudentSubjectsByStudentIdAsync(int studentId)
+        {
+            List<StudentSubject> list = await _context.StudentSubjects
+                .Where(ss => ss.StudentId == studentId).Include("Subject")
+                .ToListAsync();
+
+            return list;
+        }
 
         public async Task UpdateStudentAsync(Student student)
         {

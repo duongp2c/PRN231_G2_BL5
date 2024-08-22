@@ -1,52 +1,89 @@
-﻿
+﻿@{
+    var userRole = Context.Session.GetString("Role");
+}
 <div class="container text-center">
     <h1>Hệ thống quản lý trường học</h1>
     <p>Chào mừng bạn đến với hệ thống quản lý trường học. Vui lòng chọn một chức năng để tiếp tục.</p>
-
     <div class="row">
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Quản lý Môn học</h5>
-                    <p class="card-text">Đăng kí môn học, xem môn học.</p>
-                    <a href="/RegisterSubject/RegisterSubject" class="btn btn-primary">Quản lý Môn học</a>
+        @if (userRole == "Student")
+{
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Quản lý Môn học</h5>
+                        <p class="card-text">Đăng kí môn học, xem môn học.</p>
+                        <a href="/RegisterSubject/RegisterSubject" class="btn btn-primary">Quản lý Môn học</a>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Thông tin cá nhân</h5>
+                        <p class="card-text">Bổ sung, xem thông tin cá nhân</p>
+                        <a href="/Profile/Index" class="btn btn-primary">Thông tin cá nhân</a>
+                    </div>
+                </div>
+            </div>
+}
 
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Thông tin cá nhân</h5>
-                    <p class="card-text">Bổ sung, xem thông tin cá nhân</p>
-                    <a href="/Profile/Index" class="btn btn-primary">Thông tin cá nhân</a>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Quản lý Lớp học</h5>
-                    <p class="card-text">Thêm, sửa, xóa và xem danh sách lớp học.</p>
-                    <a href="/Classes" class="btn btn-primary">Quản lý Lớp học</a>
-                </div>
-            </div>
-        </div>
 
+        @if (userRole == "Admin")
+{
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Quản lý Môn học</h5>
-                    <p class="card-text">Thêm, sửa, xóa và xem danh sách môn học.</p>
-                    <a href="/Subjects" class="btn btn-primary">Quản lý Môn học</a>
+                    <h5 class="card-title">Quản Lý Học Sinh</h5>
+                    <p class="card-text">Thêm, sửa, xóa và xem danh sách học sinh.</p>
+                    <a href="/ManageStudent/Index" class="btn btn-primary">Quản lý học sinh</a>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Đăng nhập</h5>
+                    <h5 class="card-title">Quản Lý Tài Khoản Giáo Viên</h5>
+                    <p class="card-text">Thêm, sửa, xóa và xem danh sách tài khoản giáo viên.</p>
+                    <a href="/ManageTeacher/Index" class="btn btn-primary">Quản lý giáo viên</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Quản Lý Môn Học</h5>
+                    <p class="card-text">Thêm, xóa và xem danh sách môn học.</p>
+                    <a href="/ManageSubject/Index" class="btn btn-primary">Quản lý môn học</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Quản lý Loại Điểm</h5>
+                    <p class="card-text">Thêm, xóa và xem danh sách loại điểm.</p>
+                    <a href="/ManageGrade/Index" class="btn btn-primary">Quản lý loại điểm</a>
+                </div>
+            </div>
+        </div>
+}
+        @if (userRole == "Teacher")
+{
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Quản lý Điểm Học Sinh</h5>
+                    <p class="card-text">Thêm, sửa, xóa điểm cảu học sinh.</p>
+                    <a href="/Subjects" class="btn btn-primary">Quản lý điểm</a>
+                </div>
+            </div>
+        </div>
+}
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Tài Khoản</h5>
 
                     @if (@ViewBag.AccountId == null)
                     {

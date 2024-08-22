@@ -25,7 +25,6 @@ namespace PRN231_API.DAO
                 var grade = new GradeDTO
                 {
                     Name = e.GradeType.GradeTypeName,
-                    Weight = e.GradeType.GradeTypeWeight,
                     Grade = e.Grade,
                     AdditionalInfo = e.AdditionExplanation
                 };

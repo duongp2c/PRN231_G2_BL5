@@ -18,7 +18,7 @@ namespace PRN231_FE.Controllers
         public async Task<IActionResult> UpdateTeacherStatus(int id, bool isActive)
         {
             var httpClient = _httpClientFactory.CreateClient();
-            var url = $"http://localhost:5231/api/ManageTeacher/{id}/status?isActive={isActive}";
+            var url = $"http://localhost:5000/api/ManageTeacher/{id}/status?isActive={isActive}";
 
             var response = await httpClient.PutAsync(url, null); // No content body is needed for this request
 
@@ -46,7 +46,7 @@ namespace PRN231_FE.Controllers
         public async Task<IActionResult> DeleteTeacher(int id)
         {
             var httpClient = _httpClientFactory.CreateClient();
-            var url = $"http://localhost:5231/api/ManageTeacher/{id}";
+            var url = $"http://localhost:5000/api/ManageTeacher/{id}";
 
             // Sending the DELETE request
             var response = await httpClient.DeleteAsync(url);

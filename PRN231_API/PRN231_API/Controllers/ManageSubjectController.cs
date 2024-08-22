@@ -18,6 +18,7 @@ namespace PRN231_API.Controllers
             _subjectDAO = subjectDAO;
         }
 
+
         [HttpGet("GetAllSubjects")]
         public async Task<IActionResult> GetAllSubjects()
         {

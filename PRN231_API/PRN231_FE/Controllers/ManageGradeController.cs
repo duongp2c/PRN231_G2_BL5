@@ -25,7 +25,7 @@ namespace PRN231_FE.Controllers
         public async Task<IActionResult> DeleteGrade(int id)
         {
             var httpClient = _httpClientFactory.CreateClient();
-            var url = $"http://localhost:5231/api/ManageGradeType/{id}";
+            var url = $"http://localhost:5000/api/ManageGradeType/{id}";
 
             var response = await httpClient.DeleteAsync(url);
 
