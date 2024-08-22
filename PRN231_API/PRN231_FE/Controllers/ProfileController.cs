@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using PRN231_FE.Models;
 using System.Text;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace PRN231_FE.Controllers
 {
@@ -16,30 +17,49 @@ namespace PRN231_FE.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var accountId = HttpContext.Session.GetString("AccountId");
-            var url = "http://localhost:5000/api/Student/profile/"+accountId;
-            ProfileDTO profile = new ProfileDTO();
-            using (var client = new HttpClient())
+            if (ModelState.IsValid)
             {
-                client.BaseAddress = new Uri(url);
-
-                HttpResponseMessage response = await client.GetAsync(url);
-
-                if (response.IsSuccessStatusCode)
+                var accountId = HttpContext.Session.GetString("AccountId");
+                var token = HttpContext.Session.GetString("AuthToken");
+                if (string.IsNullOrEmpty(token))
                 {
-                    var PResponse = response.Content.ReadAsStringAsync().Result;                   
-                    profile = JsonConvert.DeserializeObject<ProfileDTO>(PResponse);
-                    Console.WriteLine(profile);
-                    ViewData["name"] = profile.name;
-                    ViewData["age"] = profile.age;
-                    ViewData["address"] = profile.address;
-                    ViewData["additionalInfo"] = profile.additionalInfo;
-                    ViewData["phone"] = profile.phone;
-                    ViewData["image"] = profile.image;
+                    return RedirectToAction("Login", "Account");
                 }
-                
-                
+                var handle = new JwtSecurityTokenHandler();
+                var JWTToken = handle.ReadJwtToken(token);
+                var roleClaim = JWTToken.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+                if(roleClaim != "Student")
+                {
+                    return RedirectToAction("Error","Unauthorized");
+                }
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var url = "http://localhost:5000/api/Student/profile/" + accountId;
+                ProfileDTO profile = new ProfileDTO();
+                using (var client = new HttpClient())
+                {
+                   client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    client.BaseAddress = new Uri(url);
+                    
+                    HttpResponseMessage response = await client.GetAsync(url);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var PResponse = response.Content.ReadAsStringAsync().Result;
+                        profile = JsonConvert.DeserializeObject<ProfileDTO>(PResponse);
+                        Console.WriteLine(profile);
+                        //ViewData["name"] = profile.name;
+                        //ViewData["age"] = profile.age;
+                        //ViewData["address"] = profile.address;
+                        //ViewData["additionalInfo"] = profile.additionalInfo;
+                        //ViewData["phone"] = profile.phone;
+                        //ViewData["image"] = profile.image;
+                    }
+                    return View(profile);
+
+                }
             }
+            
             return View();
         }
         [HttpPost]
