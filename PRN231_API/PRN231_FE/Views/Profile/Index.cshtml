@@ -5,11 +5,11 @@
 }
 <body>
     <form asp-action="Update" method="post">
-        <input type="text" id='name' name="name" value=@ViewData["name"].ToString() placeholder="name"> </input></br></br>
-        <input type="text" id='age' name="age" value=@ViewData["age"].ToString() placeholder="age"></input></br></br>
-        <input type="text" id='address' name="address" value=@ViewData["address"].ToString() placeholder="address"></input></br></br>
-        <input type="text" id='additionalInfo' name="additionalInfo" value=@ViewData["additionalInfo"].ToString() placeholder="additionalInfo"></input></br></br>
-        <input type="text" id='phone' name="phone" value=@ViewData["phone"].ToString() placeholder="phone"></input></br></br>
+        <input type="text" id='name' name="name" value=@ViewData["name"] placeholder="name"> </input></br></br>
+        <input type="text" id='age' name="age" value=@ViewData["age"] placeholder="age"></input></br></br>
+        <input type="text" id='address' name="address" value=@ViewData["address"] placeholder="address"></input></br></br>
+        <input type="text" id='additionalInfo' name="additionalInfo" value=@ViewData["additionalInfo"] placeholder="additionalInfo"></input></br></br>
+        <input type="text" id='phone' name="phone" value=@ViewData["phone"] placeholder="phone"></input></br></br>
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
     

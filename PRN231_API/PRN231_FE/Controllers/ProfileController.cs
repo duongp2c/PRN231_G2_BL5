@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PRN231_FE.Models;
-using System.Net.Http;
-using System.Reflection;
 using System.Text;
-using System.Text.Json;
-using System.Xml.Linq;
+using Newtonsoft.Json;
 
 namespace PRN231_FE.Controllers
 {
@@ -18,7 +16,8 @@ namespace PRN231_FE.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var url = "http://localhost:5000/api/Student/profile/1";
+            var accountId = HttpContext.Session.GetString("AccountId");
+            var url = "http://localhost:5000/api/Student/profile/"+accountId;
             ProfileDTO profile = new ProfileDTO();
             using (var client = new HttpClient())
             {
@@ -28,8 +27,8 @@ namespace PRN231_FE.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var PResponse = response.Content.ReadAsStringAsync().Result;
-                    profile = JsonSerializer.Deserialize<ProfileDTO>(PResponse);
+                    var PResponse = response.Content.ReadAsStringAsync().Result;                   
+                    profile = JsonConvert.DeserializeObject<ProfileDTO>(PResponse);
                     Console.WriteLine(profile);
                     ViewData["name"] = profile.name;
                     ViewData["age"] = profile.age;
@@ -62,7 +61,8 @@ namespace PRN231_FE.Controllers
                 formData["phone"] = phone;
                 formData["image"] = "image";
                 HttpContent formContent = new FormUrlEncodedContent(formData);
-                var response = await _httpClient.PostAsync("http://localhost:5000/api/Student/update/1", formContent);
+                var accountId = HttpContext.Session.GetString("AccountId");
+                var response = await _httpClient.PostAsync("http://localhost:5000/api/Student/update/"+accountId, formContent);
             }
             return RedirectToAction("Index", "Profile");
         }
