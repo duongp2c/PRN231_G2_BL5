@@ -10,8 +10,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.17" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\PRN231_API\PRN231_API.csproj" />
-  </ItemGroup>
+
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using PRN231_API.DTO; // Ensure the DTO namespace is correct
+using PRN231_FE.Models; // Ensure the DTO namespace is correct
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -87,16 +87,15 @@ namespace PRN231_FE.Controllers
         }
         // GET: /Student/EditEvaluation/{evaluationId}
         [HttpGet("EditEvaluation/{evaluationId}")]
-        public async Task<IActionResult> EditEvaluation(int evaluationId, int studentId, int subjectId, int gradeTypeId)
+        public async Task<IActionResult> EditEvaluation(int evaluationId, int studentId, string studentName, int subjectId, string subjectName, int gradeTypeId, string gradeTypeName)
         {
-            // Fetch the evaluation details using evaluationId
             var response = await _httpClient.GetAsync($"http://localhost:5231/api/Student/{studentId}/evaluations/{evaluationId}");
             var json = await response.Content.ReadAsStringAsync();
 
             if (string.IsNullOrWhiteSpace(json))
             {
                 _logger.LogWarning("API response is empty or null.");
-                return View(new EvaluationDTO()); // Return an empty DTO or handle appropriately
+                return View(new EvaluationDTO());
             }
 
             try
@@ -111,19 +110,31 @@ namespace PRN231_FE.Controllers
                     evaluation.SubjectId == subjectId &&
                     evaluation.GradeTypeId == gradeTypeId)
                 {
+                    // Setting ViewBag properties manually
+                    ViewBag.StudentName = studentName;
+                    ViewBag.SubjectName = subjectName;
+                    ViewBag.GradeTypeName = gradeTypeName;
+
+                    // Manually set the values in the model if needed
+                    //evaluation.StudentName = studentName;
+                    //evaluation.SubjectName = subjectName;
+                    //evaluation.GradeTypeName = gradeTypeName;
+
                     return View(evaluation);
                 }
 
-                // Handle mismatch case or missing data
                 _logger.LogWarning("Evaluation data does not match the provided parameters.");
                 return View(new EvaluationDTO());
             }
             catch (System.Text.Json.JsonException ex)
             {
                 _logger.LogError(ex, "Failed to deserialize JSON.");
-                return View(new EvaluationDTO()); // Handle the error and return an appropriate response
+                return View(new EvaluationDTO());
             }
         }
+
+
+
 
 
         // PUT: /Student/UpdateEvaluation
@@ -133,42 +144,29 @@ namespace PRN231_FE.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("EditEvaluation", model); // Return to the edit page with validation errors
-            }
-
-            try
-            {
-                var jsonContent = JsonConvert.SerializeObject(model);
-                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync($"http://localhost:5231/api/student/evaluation", content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    // Redirect to the StudentEvaluations action and refresh the page
-                    return RedirectToAction("StudentEvaluations", new { studentId = model.StudentId });
-                }
-                else
-                {
-                    _logger.LogWarning($"API request failed with status code: {response.StatusCode}");
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    _logger.LogWarning($"Response content: {errorContent}");
-                    ViewBag.ErrorMessage = "Failed to update the evaluation. Please try again.";
-                    return View("EditEvaluation", model);
-                }
-            }
-            catch (System.Text.Json.JsonException ex)
-            {
-                _logger.LogError(ex, "Failed to serialize JSON.");
-                ViewBag.ErrorMessage = "An error occurred while processing your request.";
+                ViewBag.ErrorMessage = "There are some errors in the form.";
                 return View("EditEvaluation", model);
             }
-            catch (Exception ex)
+
+            // Assuming _httpClient is injected in the constructor
+            var content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PutAsync("http://localhost:5231/api/Student/evaluation", content);
+
+            if (response.IsSuccessStatusCode)
             {
-                _logger.LogError(ex, "An unexpected error occurred.");
-                ViewBag.ErrorMessage = "An unexpected error occurred. Please try again.";
+                ViewBag.SuccessMessage = "Evaluation updated successfully.";
+                return RedirectToAction("StudentEvaluations", new { studentId = model.StudentId });
+            }
+            else
+            {
+                ViewBag.ErrorMessage = $"API request failed with status code: {response.StatusCode}";
+                var responseContent = await response.Content.ReadAsStringAsync();
+                _logger.LogWarning("Response content: {ResponseContent}", responseContent);
                 return View("EditEvaluation", model);
             }
         }
+
 
 
 

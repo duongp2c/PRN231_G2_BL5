@@ -48,11 +48,11 @@ namespace PRN231_API.Controllers
             {
                 EvaluationId = evaluation.EvaluationId,
                 StudentId = (int)evaluation.StudentId,
-                StudentName = evaluation.Student?.Name ?? "Unknown",
+                //StudentName = evaluation.Student?.Name ,
                 SubjectId = (int)evaluation.SubjectId,
-                SubjectName = evaluation.Subject?.SubjectName ?? "Unknown",
+                //SubjectName = evaluation.Subject?.SubjectName ,
                 GradeTypeId = (int)evaluation.GradeTypeId,
-                GradeTypeName = evaluation.GradeType?.GradeTypeName ?? "Unknown",
+                //GradeTypeName = evaluation.GradeType?.GradeTypeName ,
                 Grade = evaluation.Grade,
                 AdditionExplanation = evaluation.AdditionExplanation
             };
@@ -74,11 +74,11 @@ namespace PRN231_API.Controllers
             {
                 EvaluationId = e.EvaluationId,
                 StudentId = (int)e.StudentId,
-                StudentName = e.Student?.Name ?? "Unknown", // Handle null Student
+                //StudentName = e.Student?.Name ?? "Unknown", // Handle null Student
                 SubjectId = (int)e.SubjectId,
-                SubjectName = e.Subject?.SubjectName ?? "Unknown", // Handle null Subject
+                //SubjectName = e.Subject?.SubjectName ?? "Unknown", // Handle null Subject
                 GradeTypeId = (int)e.GradeTypeId,
-                GradeTypeName = e.GradeType?.GradeTypeName ?? "Unknown", // Handle null GradeType
+                //GradeTypeName = e.GradeType?.GradeTypeName ?? "Unknown", // Handle null GradeType
                 Grade = e.Grade,
                 AdditionExplanation = e.AdditionExplanation
             }).ToList();
@@ -97,19 +97,25 @@ namespace PRN231_API.Controllers
 
             try
             {
+                // Check if the evaluation exists before attempting to update
+                var existingEvaluation = await evaluationRepository.GetEvaluationByIdAsync(evaluationDTO.EvaluationId);
+                if (existingEvaluation == null)
+                {
+                    return NotFound("Evaluation not found.");
+                }
+
+                // Proceed with the update
                 await evaluationRepository.UpdateEvaluationAsync(evaluationDTO);
                 return NoContent();
             }
-            catch (KeyNotFoundException)
-            {
-                return NotFound("Evaluation not found.");
-            }
             catch (Exception ex)
             {
-                // Log the exception (optional)
+                // Log the exception
+                // Consider adding logging here to track the issue
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
             }
         }
+
 
 
 

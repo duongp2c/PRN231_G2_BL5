@@ -26,11 +26,11 @@ public class EvaluationDAO : IEvaluationDAO
         {
             EvaluationId = e.EvaluationId,
             StudentId = (int)e.StudentId,
-            StudentName = e.Student.Name, // Assuming `Name` is a property in `Student`
+            //StudentName = e.Student.Name, // Assuming `Name` is a property in `Student`
             SubjectId = e.Subject.SubjectId,
-            SubjectName = e.Subject.SubjectName, // Assuming `SubjectName` is a property in `Subject`
+            //SubjectName = e.Subject.SubjectName, // Assuming `SubjectName` is a property in `Subject`
             GradeTypeId = e.GradeType.GradeTypeId,
-            GradeTypeName = e.GradeType.GradeTypeName, // Assuming `GradeTypeName` is a property in `GradeType`
+            //GradeTypeName = e.GradeType.GradeTypeName, // Assuming `GradeTypeName` is a property in `GradeType`
             Grade = e.Grade,
             AdditionExplanation = e.AdditionExplanation
         }).ToList();
@@ -40,8 +40,13 @@ public class EvaluationDAO : IEvaluationDAO
 
     public async Task<Evaluation> GetEvaluationByIdAsync(int evaluationId)
     {
-        return await _context.Evaluations.FindAsync(evaluationId);
+        return await _context.Evaluations
+            .Include(e => e.Student)
+            .Include(e => e.Subject)
+            .Include(e => e.GradeType)
+            .FirstOrDefaultAsync(e => e.EvaluationId == evaluationId);
     }
+
 
     public async Task<IEnumerable<Evaluation>> GetAllEvaluationsAsync()
     {

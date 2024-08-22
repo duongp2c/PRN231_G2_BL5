@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PRN231_API.DTO.EvaluationDTO>
+﻿@model IEnumerable<PRN231_FE.Models.EvaluationDTO>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
@@ -13,10 +13,10 @@
         <thead>
             <tr>
                 <th>SubjectID</th>
-                <th>Subject</th>
-                <th>Grade Type</th>
-                <th>Grade</th>
-                <th>Additional Explanation</th>
+               
+                <th>Grade </th>
+                <th>AdditionalExplanation</th>
+                
                 <th>Action</th>
             </tr>
         </thead>
@@ -25,8 +25,7 @@
             {
                 <tr>
                     <td>@evaluation.SubjectId</td>
-                    <td>@evaluation.SubjectName</td>
-                    <td>@evaluation.GradeTypeName</td>
+                  
                     <td>@evaluation.Grade</td>
                     <td>@evaluation.AdditionExplanation</td>
                     <td>
@@ -34,8 +33,9 @@
                            asp-route-evaluationId="@evaluation.EvaluationId"
                            asp-route-studentId="@evaluation.StudentId"
                            asp-route-subjectId="@evaluation.SubjectId"
-                           asp-route-gradeTypeId="@evaluation.GradeTypeId"
-                           class="btn btn-primary">Edit</a>
+                           asp-route-gradeTypeId="@evaluation.GradeTypeId">
+                           <button class="btn btn-primary">Edit </button>
+                        </a>
                     </td>
                 </tr>
             }
@@ -46,3 +46,9 @@ else
 {
     <p>No evaluations found for this student.</p>
 }
+@* asp-route-studentName="@evaluation.StudentName" *@
+@*  asp-route-subjectName="@evaluation.SubjectName" *@
+
+@*   asp-route-gradeTypeName="@evaluation.GradeTypeName" *@
+@*    <td>@evaluation.SubjectName</td>
+            <td>@evaluation.GradeTypeName</td> *@

@@ -12,9 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using PRN231_API.Mapping; // Adjust namespace as needed
 
 var builder = WebApplication.CreateBuilder(args);
-//logging 
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
+
 // Add services to the container.
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 // Register DbContext
