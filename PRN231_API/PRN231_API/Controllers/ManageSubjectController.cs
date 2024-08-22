@@ -93,6 +93,10 @@ namespace PRN231_API.Controllers
             try
             {
                 var result = await _subjectDAO.DeleteSubjectAsync(subjectId);
+                if (result.StatusCode == 400)
+                {
+                    return BadRequest(new { message = "This subject has been studying!" });
+                }
                 return Ok("Subject deleted successfully.");
             }
             catch
