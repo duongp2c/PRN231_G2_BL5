@@ -3,212 +3,253 @@
 @{
     ViewData["Title"] = "RegisterSubject";
     var subjectOfAccount = ViewBag.SubjectOfAccount as List<PRN231_FE.Models.SubjectOfAccount>;
+  
 }
-
-<h1>RegisterSubject</h1>
-
-<div class="container pt-5">
+<div class="RegisterSubject">
+    @if (TempData["AlertMessage"] != null)
+    {
+        <script>
+            alert('@TempData["AlertMessage"]');
+        </script>
+    }
     <div class="row">
-        <div class="col-md-6">
-            <h2>Tất cả các môn học</h2>
-            <form asp-action="Create" method="post">
-                <div class="form-group">
-                    <label for="subjectName">Chọn môn học để đăng kí:</label>
-
-                    <!-- Hidden field to store AccountId -->
-                    <input type="text" name="accountId" value="@ViewBag.AccountId" hidden />
-
-                    <select id="subjectName" name="subjectId" class="form-control">
-                        @if (Model != null && Model.Any())
-                        {
-                            foreach (var subject in Model)
+        <div class="col-md-3">
+            <div class="d-flex justify-content-center pt-5">
+                <img style="width: 200px;
+                height: 200px;" src="data:image/png;base64,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" alt="">
+            </div>
+            <div class="pt-5">
+                <div>
+                    <div class="card">
+                        <div class="card-body">
+                            <a href="/RegisterSubject/RegisterSubject" class="btn btn-primary w-100">Quản lý Môn học</a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="card">
+                        <div class="card-body">
+                            @if (@ViewBag.AccountId == null)
                             {
-                                <option value="@subject.subjectId">@subject.subjectName</option>
+                                <a href="/Account/Login" class="btn btn-primary w-100">Đăng Nhập</a>
+                            }
+                            else
+                            {
+                                <a href="/Account/Logout" class="btn btn-primary w-100">Đăng xuất</a>
+                            }
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <h1 class="text-center">RegisterSubject</h1>
+            <div class="container pt-5">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2>Tất cả các môn học</h2>
+                        <form asp-action="Create" method="post">
+                            <div class="form-group">
+                                <label for="subjectName">Chọn môn học để đăng kí:</label>
+
+                                <!-- Hidden field to store AccountId -->
+                                <input type="text" name="accountId" value="@ViewBag.AccountId" hidden />
+
+                                <select id="subjectName" name="subjectId" class="form-control">
+                                    @if (Model != null && Model.Any())
+                                    {
+                                        foreach (var subject in Model)
+                                        {
+                                            <option value="@subject.subjectId">@subject.subjectName</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option value="">No subjects available</option>
+                                    }
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-2">Register</button>
+                        </form>
+
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success mt-3">
+                                @TempData["SuccessMessage"]
+                            </div>
+                        }
+                        @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-danger mt-3">
+                                @TempData["ErrorMessage"]
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Existing code for displaying subjects and other content -->
+
+
+                    <div class="col-md-6">
+                        <h2>Các môn đang theo học</h2>
+                        <table class="table table-bordered rounded">
+                            <thead>
+                                <tr class="text-center">
+                                    <th>Tên môn học</th>
+                                    <th>Giảng viên</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                @if (subjectOfAccount != null && subjectOfAccount.Any())
+                                {
+                                    foreach (var subject in subjectOfAccount)
+                                    {
+                                        <tr>
+                                            <td>@subject.subjectName</td>
+                                            <td>@subject.teacherName</td>
+                                            <td>@subject.isComplete</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3">Không có môn học nào</td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <h2>Tất cả các môn học</h2>
+                    <div class="mb-3">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm môn học...">
+                        <button id="searchButton" class="btn btn-primary mt-2">Tìm kiếm</button>
+                    </div>
+                    <table id="subjectsTable" class="table table-bordered rounded">
+                        <thead>
+                            <tr class="text-center">
+                                <th>Tên môn học</th>
+                                <th>Giảng viên</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            <!-- Dữ liệu sẽ được điền vào đây bằng JavaScript -->
+                        </tbody>
+                    </table>
+                    <div id="pagination" class="text-center">
+                        <!-- Điều khiển phân trang sẽ được tạo ra đây -->
+                    </div>
+                </div>
+            </div>
+
+            @section Scripts {
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const apiUrl = 'http://localhost:5000/api/Subject/subjecttwofields';
+                        const rowsPerPage = 5;
+                        let currentPage = 1;
+                        let subjects = [];
+                        let filteredSubjects = [];
+
+                        async function fetchSubjects(filter = '') {
+                            try {
+                                // Mã hóa URL nếu cần
+                                const encodedFilter = encodeURIComponent(filter);
+                                const url = filter ? `${apiUrl}?$filter=SubjectName eq '${encodedFilter}'` : apiUrl;
+                                const response = await fetch(url);
+
+                                if (!response.ok) {
+                                    throw new Error(`HTTP error! status: ${response.status}`);
+                                }
+
+                                subjects = await response.json();
+                                filteredSubjects = subjects;
+                                renderTable();
+                                renderPagination();
+                            } catch (error) {
+                                console.error('Lỗi khi lấy dữ liệu môn học:', error);
                             }
                         }
-                        else
-                        {
-                            <option value="">No subjects available</option>
+
+                        function renderTable() {
+                            const tableBody = document.querySelector('#subjectsTable tbody');
+                            tableBody.innerHTML = '';
+
+                            const start = (currentPage - 1) * rowsPerPage;
+                            const end = start + rowsPerPage;
+                            const paginatedSubjects = filteredSubjects.slice(start, end);
+
+                            paginatedSubjects.forEach(subject => {
+                                const row = document.createElement('tr');
+                                const nameCell = document.createElement('td');
+                                const teacherCell = document.createElement('td');
+
+                                nameCell.textContent = subject.subjectName || 'Không có dữ liệu';
+                                teacherCell.textContent = subject.teacherName || 'Không có dữ liệu';
+
+                                row.appendChild(nameCell);
+                                row.appendChild(teacherCell);
+                                tableBody.appendChild(row);
+                            });
+
+                            if (paginatedSubjects.length === 0) {
+                                const noResultsRow = document.createElement('tr');
+                                const noResultsCell = document.createElement('td');
+                                noResultsCell.colSpan = 2;
+                                noResultsCell.textContent = 'Không có kết quả nào';
+                                noResultsRow.appendChild(noResultsCell);
+                                tableBody.appendChild(noResultsRow);
+                            }
                         }
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary mt-2">Register</button>
-            </form>
 
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success mt-3">
-                    @TempData["SuccessMessage"]
-                </div>
-            }
-            @if (TempData["ErrorMessage"] != null)
-            {
-                <div class="alert alert-danger mt-3">
-                    @TempData["ErrorMessage"]
-                </div>
-            }
-        </div>
+                        function renderPagination() {
+                            const paginationDiv = document.getElementById('pagination');
+                            paginationDiv.innerHTML = '';
 
-        <!-- Existing code for displaying subjects and other content -->
+                            const totalPages = Math.ceil(filteredSubjects.length / rowsPerPage);
 
+                            for (let i = 1; i <= totalPages; i++) {
+                                const pageButton = document.createElement('button');
+                                pageButton.textContent = i;
+                                pageButton.className = 'btn btn-primary mx-1';
+                                pageButton.addEventListener('click', () => {
+                                    currentPage = i;
+                                    renderTable();
+                                });
 
-        <div class="col-md-6">
-            <h2>Các môn đang theo học</h2>
-            <table class="table table-bordered rounded">
-                <thead>
-                    <tr class="text-center">
-                        <th>Tên môn học</th>
-                        <th>Giảng viên</th>
-                        <th>Trạng thái</th>
-                    </tr>
-                </thead>
-                <tbody class="text-center">
-                    @if (subjectOfAccount != null && subjectOfAccount.Any())
-                    {
-                        foreach (var subject in subjectOfAccount)
-                        {
-                            <tr>
-                                <td>@subject.subjectName</td>
-                                <td>@subject.teacherName</td>
-                                <td>@subject.isComplete</td>
-                            </tr>
+                                if (i === currentPage) {
+                                    pageButton.classList.add('btn-secondary');
+                                }
+
+                                paginationDiv.appendChild(pageButton);
+                            }
                         }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="3">Không có môn học nào</td>
-                        </tr>
-                    }
-                    
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div>
-        <h2>Tất cả các môn học</h2>
-        <div class="mb-3">
-            <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm môn học...">
-            <button id="searchButton" class="btn btn-primary mt-2">Tìm kiếm</button>
-        </div>
-        <table id="subjectsTable" class="table table-bordered rounded">
-            <thead>
-                <tr class="text-center">
-                    <th>Tên môn học</th>
-                    <th>Giảng viên</th>
-                </tr>
-            </thead>
-            <tbody class="text-center">
-                <!-- Dữ liệu sẽ được điền vào đây bằng JavaScript -->
-            </tbody>
-        </table>
-        <div id="pagination" class="text-center">
-            <!-- Điều khiển phân trang sẽ được tạo ra đây -->
+
+                        // Sự kiện tìm kiếm
+                        document.getElementById('searchButton').addEventListener('click', () => {
+                            const searchTerm = document.getElementById('searchInput').value.trim();
+                            fetchSubjects(searchTerm);
+                        });
+
+                        // Tìm kiếm khi nhấn Enter trong ô tìm kiếm
+                        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                document.getElementById('searchButton').click();
+                            }
+                        });
+
+                        // Lấy và điền dữ liệu môn học khi tải trang
+                        fetchSubjects();
+                    });
+
+                </script>
+            }
         </div>
     </div>
 </div>
-
-@section Scripts {
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const apiUrl = 'http://localhost:5000/api/Subject/subjecttwofields';
-            const rowsPerPage = 5;
-            let currentPage = 1;
-            let subjects = [];
-            let filteredSubjects = [];
-
-            async function fetchSubjects(filter = '') {
-                try {
-                    // Mã hóa URL nếu cần
-                    const encodedFilter = encodeURIComponent(filter);
-                    const url = filter ? `${apiUrl}?$filter=SubjectName eq '${encodedFilter}'` : apiUrl;
-                    const response = await fetch(url);
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    subjects = await response.json();
-                    filteredSubjects = subjects;
-                    renderTable();
-                    renderPagination();
-                } catch (error) {
-                    console.error('Lỗi khi lấy dữ liệu môn học:', error);
-                }
-            }
-
-            function renderTable() {
-                const tableBody = document.querySelector('#subjectsTable tbody');
-                tableBody.innerHTML = '';
-
-                const start = (currentPage - 1) * rowsPerPage;
-                const end = start + rowsPerPage;
-                const paginatedSubjects = filteredSubjects.slice(start, end);
-
-                paginatedSubjects.forEach(subject => {
-                    const row = document.createElement('tr');
-                    const nameCell = document.createElement('td');
-                    const teacherCell = document.createElement('td');
-
-                    nameCell.textContent = subject.subjectName || 'Không có dữ liệu';
-                    teacherCell.textContent = subject.teacherName || 'Không có dữ liệu';
-
-                    row.appendChild(nameCell);
-                    row.appendChild(teacherCell);
-                    tableBody.appendChild(row);
-                });
-
-                if (paginatedSubjects.length === 0) {
-                    const noResultsRow = document.createElement('tr');
-                    const noResultsCell = document.createElement('td');
-                    noResultsCell.colSpan = 2;
-                    noResultsCell.textContent = 'Không có kết quả nào';
-                    noResultsRow.appendChild(noResultsCell);
-                    tableBody.appendChild(noResultsRow);
-                }
-            }
-
-            function renderPagination() {
-                const paginationDiv = document.getElementById('pagination');
-                paginationDiv.innerHTML = '';
-
-                const totalPages = Math.ceil(filteredSubjects.length / rowsPerPage);
-
-                for (let i = 1; i <= totalPages; i++) {
-                    const pageButton = document.createElement('button');
-                    pageButton.textContent = i;
-                    pageButton.className = 'btn btn-primary mx-1';
-                    pageButton.addEventListener('click', () => {
-                        currentPage = i;
-                        renderTable();
-                    });
-
-                    if (i === currentPage) {
-                        pageButton.classList.add('btn-secondary');
-                    }
-
-                    paginationDiv.appendChild(pageButton);
-                }
-            }
-
-            // Sự kiện tìm kiếm
-            document.getElementById('searchButton').addEventListener('click', () => {
-                const searchTerm = document.getElementById('searchInput').value.trim();
-                fetchSubjects(searchTerm);
-            });
-
-            // Tìm kiếm khi nhấn Enter trong ô tìm kiếm
-            document.getElementById('searchInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    document.getElementById('searchButton').click();
-                }
-            });
-
-            // Lấy và điền dữ liệu môn học khi tải trang
-            fetchSubjects();
-        });
-
-    </script>
-}
