@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
+using System.Diagnostics;
+
 namespace PRN231_FE.Controllers
 {
     public class HomeController : Controller
@@ -12,6 +14,7 @@ namespace PRN231_FE.Controllers
             return View("Views/Home/Index1.cshtml");
         }
        
+
 
     }
 }

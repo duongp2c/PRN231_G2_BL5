@@ -1,0 +1,62 @@
+﻿@model PRN231_FE.Models.EvaluationDTO
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Edit Evaluation";
+}
+
+<h1>Edit Evaluation</h1>
+
+<!-- Display success or error messages -->
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewBag.SuccessMessage
+    </div>
+}
+else if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.ErrorMessage
+    </div>
+}
+
+<form asp-action="UpdateEvaluation" method="post">
+    @Html.AntiForgeryToken() <!-- Add anti-forgery token for security -->
+    <!-- Hidden attributes (Now visible) -->
+    <div class="form-group">
+        <label for="EvaluationId">Evaluation ID</label>
+        <input type="text" class="form-control" id="EvaluationId" name="EvaluationId" value="@Model.EvaluationId" readonly />
+    </div>
+    <div class="form-group">
+        <label for="StudentId">Student ID</label>
+        <input type="text" class="form-control" id="StudentId" name="StudentId" value="@Model.StudentId" readonly />
+    </div>
+    <div class="form-group">
+        <label for="SubjectId">Subject ID</label>
+        <input type="text" class="form-control" id="SubjectId" name="SubjectId" value="@Model.SubjectId" readonly />
+    </div>
+    <div class="form-group">
+        <label for="GradeTypeId">Grade Type ID</label>
+        <input type="text" class="form-control" id="GradeTypeId" name="GradeTypeId" value="@Model.GradeTypeId" readonly />
+    </div>
+
+    <!-- Editable fields -->
+    <div class="form-group">
+        <label for="Grade">Grade</label>
+        <input type="number" class="form-control" id="Grade" name="Grade" value="@Model.Grade" required />
+    </div>
+    <div class="form-group">
+        <label for="AdditionExplanation">Additional Explanation</label>
+        <textarea class="form-control" id="AdditionExplanation" name="AdditionExplanation" rows="3">@Model.AdditionExplanation</textarea>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="StudentEvaluations" asp-route-studentId="@Model.StudentId" class="btn btn-secondary">Cancel</a>
+</form>
+
+
+@*   <input type="text" class="form-control" id="GradeTypeName" name="GradeTypeName" value="@Model.GradeTypeName" readonly /> *@
+@*   <input type="text" class="form-control" id="SubjectName" name="SubjectName" value="@Model.SubjectName" readonly /> *@
+@*  <input type="text" class="form-control" id="StudentName" name="StudentName" value="@Model.StudentName" readonly /> *@
