@@ -2,30 +2,35 @@
 @{
     var subjects = ViewData["sList"] as List<SubjectDTO>;
 }
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Subject ID</th>
-            <th>Subject Name </th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (SubjectDTO s in subjects)
-        {
-            <tr>
-                <td>@s.subjectId</td>
-                <td>@s.name</td>
-                <td>
-                    <div>
-                        <a asp-controller="StudentGrade" asp-action="CheckGrade" asp-route-id="@s.subjectId" title="Edit">Check Grade</a>                        
-                    </div>
-                </td>
-            </tr>
-        }
+<body>
+    <div class="row">
+        <h1>Your Subject</h1>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Subject ID</th>
+                    <th>Subject Name </th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (SubjectDTO s in subjects)
+                {
+                    <tr>
+                        <td>@s.subjectId</td>
+                        <td>@s.name</td>
+                        <td>
+                            <div>
+                                <a asp-controller="StudentGrade" asp-action="CheckGrade" asp-route-id="@s.subjectId" title="Edit">Check Grade</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
 
-    </tbody>
-</table>
+            </tbody>
+        </table>
+    </div>
+</body>
 <style>
     .table {
         width: 100%;

@@ -2,44 +2,48 @@
 @{
 }
 <body>
-    <img src=@Model.image alt="no image" style="width:128px;height:128px;">
+    <div class="row">
+        <div class="col-md-4">
+            <label>Profile Picture</label></br>
+            <img src=@Model.image alt="no image" style="width:300px;height:300px;">  
+        </div>
+        <div class="col-md-8">
+            <form asp-action="Update" method="post">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id='name' name="name" value="@Model.name" placeholder="name" class="form-control" required>
+                </div>
+                </br>
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" id='age' name="age" value="@Model.age" placeholder="age" class="form-control" required id="val">
+                </div>
+                </br>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" id='address' name="address" value="@Model.address" placeholder="address" class="form-control">
+                </div>
+                </br>
+                <div class="form-group">
+                    <label>Additional Info</label>
+                    <input type="text" id='additionalInfo' name="additionalInfo" value="@Model.additionalInfo" placeholder="additionalInfo" class="form-control">
+                </div>
+                </br>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="text" id='phone' name="phone" value="@Model.phone" placeholder="phone" class="form-control">
+                </div>
+                </br>
+                <div class="form-group">
+                    <label>Image Link</label>
+                    <input type="text" id='image' name="image" value="@Model.image" placeholder="image" class="form-control">
+                </div>
+                </br>
+                <button type="submit" class="btn btn-primary">Update</button>
 
-    {
-    <form asp-action="Update" method="post">
-        <div class="form-group">
-            <label>
-                Name <span>(required!)</span>
-            </label>
-            <input type="text" id='name' name="name" value="@Model.name" placeholder="name" class="form-control" required>
+            </form>
         </div>
-        </br>
-        <div class="form-group">
-            <label>
-                Name <span>(required!)</span>
-            </label>
-            <input type="number" id='age' name="age" value="@Model.age" placeholder="age" class="form-control" required id="val">
-        </div>
-        </br>
-        <div class="form-group">
-            <input type="text" id='address' name="address" value="@Model.address" placeholder="address" class="form-control">
-        </div>
-        </br>
-        <div class="form-group">
-            <input type="text" id='additionalInfo' name="additionalInfo" value="@Model.additionalInfo" placeholder="additionalInfo" class="form-control">
-        </div>
-        </br>
-        <div class="form-group">
-            <input type="text" id='phone' name="phone" value="@Model.phone" placeholder="phone" class="form-control">
-        </div>
-        </br>
-        <div class="form-group">
-            <input type="text" id='image' name="image" value="@Model.image" placeholder="image" class="form-control">
-        </div>
-        </br>
-        <button type="submit" class="btn btn-primary">Update</button>
-
-    </form>
-
+    </div>
 </body>
 
 <script src="~/lib/jquery/dist/jquery.js"></script>

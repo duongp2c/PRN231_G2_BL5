@@ -2,28 +2,33 @@
 @{
     var grades = ViewData["sList"] as List<GradeDTO>;
 }
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Grade Name</th>
-            <th>Grade Weight </th>
-            <th>Grade</th>
-            <th>Additional Info</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (GradeDTO g in grades)
-        {
-            <tr>
-                <td>@g.name</td>
-                <td>@g.weight</td>
-                <td>@g.grade<td>
-                <td>@g.additionalInfo</td>             
-            </tr>
-        }
+<body>
+    <div class="row">
+        <h1>Check Grade</h1>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Grade Name</th>
+                    <th>Grade Weight </th>
+                    <th>Grade</th>
+                    <th>Additional Information</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (GradeDTO g in grades)
+                {
+                    <tr>
+                        <td>@g.name</td>
+                        <td>@g.weight</td>
+                        <td>@g.grade</td>
+                        <td>@g.additionalInfo</td>
+                    </tr>
+                }
 
-    </tbody>
-</table>
+            </tbody>
+        </table>
+    </div>
+</body>
 <style>
     .table {
         width: 100%;
