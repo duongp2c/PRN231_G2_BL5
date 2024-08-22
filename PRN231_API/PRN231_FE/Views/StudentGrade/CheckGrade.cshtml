@@ -2,28 +2,72 @@
 @{
     var grades = ViewData["sList"] as List<GradeDTO>;
 }
-<table>
-    <thead>
-        <tr>
-            <th>Grade Name</th>
-            <th>Grade Weight </th>
-            <th>Grade</th>
-            <th>Additional Info</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (GradeDTO g in grades)
-        {
-            <tr>
+<body>
+    <div class="row">
+        <h1>Điểm Môn</h1>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Đầu Điểm</th>
+                    <th>Phần Trăm </th>
+                    <th>Điểm</th>
+                    <th>Thông tin thêm</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (GradeDTO g in grades)
+                {
+                    <tr>
+                        <td>@g.name</td>
+                        <td>@g.weight</td>
+                        <td>@g.grade</td>
+                        <td>@g.additionalInfo</td>
+                    </tr>
+                }
 
-                <td>@g.name</td>
-                <td>@g.weight</td>
-                <td>@g.grade<td>
-                <td>@g.additionalInfo</td>
-                
-            </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+<style>
+    .table {
+        width: 100%;
+        margin: 20px 0;
+        border-collapse: collapse;
+    }
+
+        .table th, .table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
         }
 
-    </tbody>
-</table>
+        .table th {
+            background: linear-gradient(to right, #007bff, #00d2ff); /* Gradient background for header */
+            color: #ffffff; /* White text color for header */
+        }
 
+    .table-striped tbody tr:nth-of-type(odd) {
+        background: #f9f9f9; /* Solid background for odd rows */
+    }
+
+    .table-striped tbody tr:nth-of-type(even) {
+        background: #ffffff; /* Solid background for even rows */
+    }
+
+    .table-striped tbody tr:hover {
+        background: #e0e0e0; /* Light gray background for hover effect */
+    }
+
+    .btn {
+        text-decoration: none;
+        color: #fff;
+        background-color: #007bff;
+        border: 1px solid #007bff;
+        border-radius: 4px;
+        padding: 6px 12px;
+        display: inline-block;
+        font-size: 14px;
+        text-align: center;
+    }
+</style>

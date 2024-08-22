@@ -1,19 +1,60 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model ProfileDTO
 @{
 }
 <body>
-    <form asp-action="Update" method="post">
-        <input type="text" id='name' name="name" value=@ViewData["name"].ToString() placeholder="name"> </input></br></br>
-        <input type="text" id='age' name="age" value=@ViewData["age"].ToString() placeholder="age"></input></br></br>
-        <input type="text" id='address' name="address" value=@ViewData["address"].ToString() placeholder="address"></input></br></br>
-        <input type="text" id='additionalInfo' name="additionalInfo" value=@ViewData["additionalInfo"].ToString() placeholder="additionalInfo"></input></br></br>
-        <input type="text" id='phone' name="phone" value=@ViewData["phone"].ToString() placeholder="phone"></input></br></br>
-        <button type="submit" class="btn btn-primary">Update</button>
-    </form>
-    
+    <div class="row">
+        <h1> Thông tin học sinh</h1>
+        <div class="col-md-4">
+            <label>Ảnh Cá Nhân</label></br>
+            <div class="d-flex justify-content-center pt-5">
+                <img src=@Model.image alt="no image" style="width:200px;height:200px;">  
+            </div>
+            
+        </div>
+        <div class="col-md-8">
+            <form asp-action="Update" method="post">
+                <div class="form-group">
+                    <label>Tên</label>
+                    <input type="text" id='name' name="name" value="@Model.name" placeholder="name" class="form-control" required>
+                </div>
+                </br>
+                <div class="form-group">
+                    <label>Tuổi</label>
+                    <input type="number" id='age' name="age" value="@Model.age" placeholder="age" class="form-control" required id="val">
+                </div>
+                </br>
+                <div class="form-group">
+                    <label>Địa chỉ</label>
+                    <input type="text" id='address' name="address" value="@Model.address" placeholder="address" class="form-control">
+                </div>
+                </br>
+                <div class="form-group">
+                    <label>Thông tin thêm</label>
+                    <input type="text" id='additionalInfo' name="additionalInfo" value="@Model.additionalInfo" placeholder="additionalInfo" class="form-control">
+                </div>
+                </br>
+                <div class="form-group">
+                    <label>Số Điện Thoại</label>
+                    <input type="text" id='phone' name="phone" value="@Model.phone" placeholder="phone" class="form-control">
+                </div>
+                </br>
+                <div class="form-group">
+                    <label>Ảnh cá nhân</label>
+                    <input type="text" id='image' name="image" value="@Model.image" placeholder="image" class="form-control">
+                </div>
+                </br>
+                <button type="submit" class="btn btn-primary">Update</button>
+
+            </form>
+        </div>
+    </div>
 </body>
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+</script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js">
+</script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js">
+</script>

@@ -23,10 +23,10 @@ namespace PRN231_API.Controllers
             var subjects = await _studentDao.GetStudentSubjectAsync(id);
             return Ok(subjects);
         }
-        [HttpGet("subject/{studentId}/{subjectId}")]
-        public async Task<ActionResult<List<SubjectDTO>>> GetStudentGrade(int studentId,int subjectId)
+        [HttpGet("subject/{accountId}/{subjectId}")]
+        public async Task<ActionResult<List<SubjectDTO>>> GetStudentGrade(int accountId,int subjectId)
         {
-            var subjects = await _evaluationDao.GetStudentSubjectGradeAsync(studentId, subjectId);
+            var subjects = await _evaluationDao.GetStudentSubjectGradeAsync(accountId, subjectId);
             return Ok(subjects);
         }
 

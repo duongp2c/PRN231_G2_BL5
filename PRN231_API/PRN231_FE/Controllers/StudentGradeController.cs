@@ -15,7 +15,8 @@ namespace PRN231_FE.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var url = "http://localhost:5231/api/Evaluation/subject/1";
+            var accountId = HttpContext.Session.GetString("AccountId");
+            var url = "http://localhost:5000/api/Evaluation/subject/"+accountId;
             List<SubjectDTO> sList = new List<SubjectDTO>();
             using (var client = new HttpClient())
             {
@@ -34,12 +35,12 @@ namespace PRN231_FE.Controllers
 
             }
         }
-        //http://localhost:5139/StudentGrade/CheckGrade/1
         [HttpGet]
         [ActionName("CheckGrade")]
         public async Task<IActionResult> CheckGrade(string id)
         {
-            var url = "http://localhost:5231/api/Evaluation/subject/1/"+id;//studentId(session) then subjectId(url)
+            var accountId = HttpContext.Session.GetString("AccountId");
+            var url = "http://localhost:5000/api/Evaluation/subject/"+accountId+"/"+id;//studentId(session) then subjectId(url)
             List<GradeDTO> sList = new List<GradeDTO>();
             using (var client = new HttpClient())
             {
