@@ -51,5 +51,9 @@ namespace PRN231_API.Repository
             return student.StudentId;  // StudentId is nullable, so this is safe
         }
 
+        //public Task<Student?> GetStudentImagesByAccountID(int accountId)
+        //{
+            
+        //}
     }
 }

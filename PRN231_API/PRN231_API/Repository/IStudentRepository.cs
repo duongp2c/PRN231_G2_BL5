@@ -8,5 +8,6 @@ namespace PRN231_API.Repository
         Task<List<StudentSubject>> GetStudentSubjectsAsync(int studentId);
         Task AddStudentSubjectAsync(StudentSubject studentSubject);
         Task<int?> GetStudentIdByAccountIdAsync(int accountId);
+        //Task<Student?> GetStudentImagesByAccountID(int accountId);
     }
 }
