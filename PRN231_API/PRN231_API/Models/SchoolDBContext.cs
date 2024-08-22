@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -7,7 +7,7 @@ namespace PRN231_API.Models
 {
     public partial class SchoolDBContext : DbContext
     {
-        public SchoolDBContext()
+         public SchoolDBContext()
         {
         }
 

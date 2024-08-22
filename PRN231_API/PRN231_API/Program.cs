@@ -1,17 +1,20 @@
 
-using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OData.Edm;
-using Microsoft.OData.ModelBuilder;
 using PRN231_API.DAO;
 using PRN231_API.Models;
 using PRN231_API.Repository;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.OData;
+using Microsoft.OData.Edm;
+using Microsoft.OData.ModelBuilder;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 using System.Security.Claims;
 using System.Text;
+using static Org.BouncyCastle.Math.EC.ECCurve;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,10 +26,14 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddTransient<IJwtTokenService, JwtTokenService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//builder.Services.AddControllers().AddJsonOptions(x =>
+//   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 builder.Services.AddCors(opts =>
 {
     opts.AddPolicy("CORSPolicy", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed((host) => true));
 });
+
 
 builder.Services.AddControllers().AddOData(option => option.Select().Filter().Count().OrderBy().Expand().SetMaxTop(100)
           .AddRouteComponents("odata", GetEdmModel()));
@@ -123,6 +130,14 @@ builder.Services.AddAuthorization(x =>
     x.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
 });
 
+
+builder.Services.AddDbContext<SchoolDBContext>(options =>
+       options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<SchoolDBContext>();
+builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped<StudentDAO>();
+builder.Services.AddScoped<IEvaluationRepository, EvaluationRepository>();
+builder.Services.AddScoped<EvaluationDAO>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -132,6 +147,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
+app.UseHttpsRedirection();
+
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -141,6 +158,7 @@ app.UseSession();
 app.UseODataBatching();
 
 app.MapControllers();
+
 
 app.Run();
 IEdmModel GetEdmModel()

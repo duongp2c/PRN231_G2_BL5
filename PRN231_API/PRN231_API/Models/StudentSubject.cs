@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace PRN231_API.Models
@@ -13,3 +13,4 @@ namespace PRN231_API.Models
         public virtual Subject Subject { get; set; } = null!;
     }
 }
+

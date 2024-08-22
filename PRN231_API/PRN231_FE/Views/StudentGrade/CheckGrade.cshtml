@@ -1,0 +1,29 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    var grades = ViewData["sList"] as List<GradeDTO>;
+}
+<table>
+    <thead>
+        <tr>
+            <th>Grade Name</th>
+            <th>Grade Weight </th>
+            <th>Grade</th>
+            <th>Additional Info</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (GradeDTO g in grades)
+        {
+            <tr>
+
+                <td>@g.name</td>
+                <td>@g.weight</td>
+                <td>@g.grade<td>
+                <td>@g.additionalInfo</td>
+                
+            </tr>
+        }
+
+    </tbody>
+</table>
+

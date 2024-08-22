@@ -1,4 +1,5 @@
-﻿using PRN231_API.Models;
+using PRN231_API.DTO;
+using PRN231_API.Models;
 using PRN231_API.Repository;
 
 namespace PRN231_API.DAO
@@ -13,6 +14,57 @@ namespace PRN231_API.DAO
             _studentRepository = studentRepository;
            
         }
+        
+        public async Task<ProfileDTO> GetStudentDetailAsync(int accountId)
+        {
+            var student = await _studentRepository.GetStudentByIdAsync(accountId);
+            var studentDetail = await _studentRepository.GetStudentDetailByIdAsync(student.StudentId);
+            var profile = new ProfileDTO { 
+                Name = student.Name,
+                Age = student.Age,
+                Address = studentDetail.Address,
+                AdditionalInfo = studentDetail.AdditionalInformation,
+                Phone = studentDetail.Phone,
+                Image = studentDetail.Image
+            };
+            return profile;
+        }
+        public async Task<List<Subject1DTO>> GetStudentSubjectAsync(int accountId)
+        {
+            var student = await _studentRepository.GetStudentByIdAsync(accountId);
+            List<StudentSubject> ss = await _studentRepository.GetStudentSubjectsAsync(student.StudentId);
+            List<Subject1DTO> subjects = new List<Subject1DTO>();
+            foreach (var subject in ss) 
+            {
+                Subject1DTO s = new Subject1DTO
+                {
+                    Name = subject.Subject.SubjectName,
+                    SubjectId = subject.Subject.SubjectId
+                };
+                subjects.Add(s);
+            }
+            return subjects;
+        }
+        public async Task<string> UpdateStudentDetailAsync(ProfileDTO profile , int id)
+        {
+            var student = await _studentRepository.GetStudentByIdAsync(id);//sua sau khi co session
+            if (student == null)
+                return "Student not found.";
+            var studentDetail = await _studentRepository.GetStudentDetailByIdAsync(id);//sua sau khi co session
+            if (studentDetail == null)
+                return "StudentDetail not found.";
+            student.Name = profile.Name;
+            student.Age = profile.Age;
+            studentDetail.Address = profile.Address;
+            studentDetail.AdditionalInformation = profile.AdditionalInfo;
+            studentDetail.Phone = profile.Phone;  
+            studentDetail.Image = profile.Image;
+            await _studentRepository.UpdateStudentAsync(student);
+            await _studentRepository.UpdateStudentDetailAsync(studentDetail);
+
+            return "Update success";
+        }
+
         public async Task<string> RegisterSubjectAsync(int subjectId, int accountId)
         {
             // Lấy AccountId từ session

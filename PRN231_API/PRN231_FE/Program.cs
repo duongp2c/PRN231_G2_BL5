@@ -16,6 +16,12 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddHttpClient<AccountController>();
 
+builder.Services.AddHttpClient<ProfileController>();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,6 +35,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+
 app.UseSession();
 
 app.UseEndpoints(endpoints =>
@@ -37,5 +44,6 @@ app.UseEndpoints(endpoints =>
         name: "default",
         pattern: "{controller=Account}/{action=Login}/{id?}");
 });
+
 
 app.Run();

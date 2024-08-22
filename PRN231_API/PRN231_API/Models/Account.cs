@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace PRN231_API.Models
@@ -14,6 +14,6 @@ namespace PRN231_API.Models
 
         public virtual Student? Student { get; set; }
         public virtual Teacher? Teacher { get; set; }
-
     }
 }
+

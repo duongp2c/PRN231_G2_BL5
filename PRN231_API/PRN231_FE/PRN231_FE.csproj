@@ -7,6 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.17" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.36.0" />
@@ -14,6 +17,7 @@
 
   <ItemGroup>
     <Folder Include="Helper\" />
+
   </ItemGroup>
 
 </Project>
