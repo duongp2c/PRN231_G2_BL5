@@ -35,6 +35,7 @@ namespace PRN231_FE.Controllers
                     ViewData["address"] = profile.address;
                     ViewData["additionalInfo"] = profile.additionalInfo;
                     ViewData["phone"] = profile.phone;
+                    ViewData["image"] = profile.image;
                 }
                 
                 
@@ -51,6 +52,7 @@ namespace PRN231_FE.Controllers
             var address = Request.Form["address"].ToString().Trim();
             var additionalInfo = Request.Form["additionalInfo"].ToString().Trim();
             var phone = Request.Form["phone"].ToString().Trim();
+            var image = Request.Form["image"].ToString().Trim();
             if (ModelState.IsValid)
             {
                 Dictionary<string,string> formData = new Dictionary<string,string>();
@@ -59,7 +61,7 @@ namespace PRN231_FE.Controllers
                 formData["age"] = age;
                 formData["additionalInfo"] = additionalInfo;
                 formData["phone"] = phone;
-                formData["image"] = "image";
+                formData["image"] = image;
                 HttpContent formContent = new FormUrlEncodedContent(formData);
                 var accountId = HttpContext.Session.GetString("AccountId");
                 var response = await _httpClient.PostAsync("http://localhost:5000/api/Student/update/"+accountId, formContent);
