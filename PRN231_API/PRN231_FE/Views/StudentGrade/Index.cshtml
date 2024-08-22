@@ -4,13 +4,13 @@
 }
 <body>
     <div class="row">
-        <h1>Your Subject</h1>
+        <h1>Môn học</h1>
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>Subject ID</th>
-                    <th>Subject Name </th>
-                    <th>Action</th>
+                    <th>ID môn học</th>
+                    <th>Tên Môn Học </th>
+                    <th>Xem Điểm</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,7 +21,7 @@
                         <td>@s.name</td>
                         <td>
                             <div>
-                                <a asp-controller="StudentGrade" asp-action="CheckGrade" asp-route-id="@s.subjectId" title="Edit">Check Grade</a>
+                                <a asp-controller="StudentGrade" asp-action="CheckGrade" asp-route-id="@s.subjectId" title="Edit">Xem Điểm</a>
                             </div>
                         </td>
                     </tr>
