@@ -8,10 +8,12 @@ namespace PRN231_FE.Controllers
     public class ManageStudentController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly HttpClient _httpClient;
 
-        public ManageStudentController(IHttpClientFactory httpClientFactory)
+        public ManageStudentController(IHttpClientFactory httpClientFactory, HttpClient httpClient)
         {
             _httpClientFactory = httpClientFactory;
+            _httpClient = httpClient;
         }
 
         public async Task<IActionResult> Index()
@@ -24,9 +26,13 @@ namespace PRN231_FE.Controllers
         public async Task<IActionResult> UpdateStudentStatus(int id, bool isActive)
         {
             var httpClient = _httpClientFactory.CreateClient();
+            var token = HttpContext.Session.GetString("AuthToken");
+
+            // Set the authorization header for the HttpClient
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var url = $"http://localhost:5000/api/ManageStudent/{id}/status?isActive={isActive}";
 
-            var response = await httpClient.PutAsync(url, null); // No content body is needed for this request
+            var response = await _httpClient.PutAsync(url, null); // No content body is needed for this request
 
             if (response.IsSuccessStatusCode)
             {
@@ -41,10 +47,14 @@ namespace PRN231_FE.Controllers
         public async Task<IActionResult> DeleteStudent(int id)
         {
             var httpClient = _httpClientFactory.CreateClient();
+            var token = HttpContext.Session.GetString("AuthToken");
+
+            // Set the authorization header for the HttpClient
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var url = $"http://localhost:5000/api/ManageStudent/{id}";
 
             // Sending the DELETE request
-            var response = await httpClient.DeleteAsync(url);
+            var response = await _httpClient.DeleteAsync(url);
 
             // Check if the deletion was successful
             if (response.IsSuccessStatusCode)

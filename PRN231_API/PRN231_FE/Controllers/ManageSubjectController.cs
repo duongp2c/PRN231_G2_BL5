@@ -6,10 +6,12 @@ namespace PRN231_FE.Controllers
     public class ManageSubjectController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly HttpClient _httpClient;
 
-        public ManageSubjectController(IHttpClientFactory httpClientFactory)
+        public ManageSubjectController(IHttpClientFactory httpClientFactory, HttpClient httpClient)
         {
             _httpClientFactory = httpClientFactory;
+            _httpClient = httpClient;
         }
         public IActionResult Index()
         {
@@ -25,9 +27,13 @@ namespace PRN231_FE.Controllers
         public async Task<IActionResult> DeleteSubject(int id)
         {
             var httpClient = _httpClientFactory.CreateClient();
+            var token = HttpContext.Session.GetString("AuthToken");
+
+            // Set the authorization header for the HttpClient
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var url = $"http://localhost:5000/api/ManageSubject/{id}";
 
-            var response = await httpClient.DeleteAsync(url);
+            var response = await _httpClient.DeleteAsync(url);
 
             // Check if the deletion was successful
             if (response.IsSuccessStatusCode)

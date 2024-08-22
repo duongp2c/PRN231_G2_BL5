@@ -193,7 +193,8 @@
                 try {
                     var token = '@token';
                     const response = await fetch(`/ManageStudent/DeleteStudent?id=${studentId}`,
-                    { method: 'POST',
+                        {
+                            method: 'DELETE',
                                 headers: {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json' // Optional, depending on your API

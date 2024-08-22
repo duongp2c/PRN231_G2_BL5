@@ -224,7 +224,7 @@
                         try {
                             var token = '@token';
                             const response = await fetch(`/ManageTeacher/DeleteTeacher`, {
-                                method: 'POST',
+                                method: 'DELETE',
                                 headers: {
                                     'Authorization': `Bearer ${token}`,
                                     'Content-Type': 'application/x-www-form-urlencoded',
