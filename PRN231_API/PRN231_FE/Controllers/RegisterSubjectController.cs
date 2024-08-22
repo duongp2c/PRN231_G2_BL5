@@ -61,6 +61,7 @@ namespace PRN231_FE.Controllers
                 // Call the API to get the subjects the student is currently enrolled in
                 var subjectOfAccount = await _httpClient.GetFromJsonAsync<List<SubjectOfAccount>>($"http://localhost:5000/api/Subject/student/{accountId}");
 
+                var imageStudent = await _httpClient.GetFromJsonAsync<ProfileDTO>($"http://localhost:5000/api/Student/profile/{accountId}");
                 // Check if there are no subjects
                 if (subjectOfAccount == null)
                 {
@@ -70,7 +71,7 @@ namespace PRN231_FE.Controllers
                 // Pass the data and AccountId to the view
                 ViewBag.AccountId = accountId;
                 ViewBag.SubjectOfAccount = subjectOfAccount;
-
+                ViewBag.ImageStudent = imageStudent;
                 return View(subjects);
             }
             catch (Exception ex)
