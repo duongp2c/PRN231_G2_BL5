@@ -139,5 +139,18 @@ namespace PRN231_API.Repository
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<Account?> GetAccountByEmailAndPasswordAsync(AccountLoginDto user)
+        {
+            try
+            {
+                return _context.Accounts.SingleOrDefault(u => u.Email == user.Email && u.Password == user.Password);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

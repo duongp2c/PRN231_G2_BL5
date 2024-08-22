@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace PRN231_FE.Controllers
 {
@@ -14,34 +15,82 @@ namespace PRN231_FE.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            return (View("Index"));
+            try
+            {
+                var token = HttpContext.Session.GetString("AuthToken");
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(token);
+
+                var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+
+                // Check if the user has the "Student" role
+                if (roleClaim == null)
+                {
+                    return RedirectToAction("Error", "Unauthorized");
+                }
+                return (View("Index"));
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return RedirectToAction("Error", "Unauthorized");
+            }
         }
         [HttpPost]
         public async Task<IActionResult> UpdateTeacherStatus(int id, bool isActive)
         {
-            var httpClient = _httpClientFactory.CreateClient();
-            var token = HttpContext.Session.GetString("AuthToken");
-
-            // Set the authorization header for the HttpClient
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            var url = $"http://localhost:5000/api/ManageTeacher/{id}/status?isActive={isActive}";
-
-            var response = await _httpClient.PutAsync(url, null); // No content body is needed for this request
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return RedirectToAction("Index"); // Redirect back to the list of students after a successful update
+                var httpClient = _httpClientFactory.CreateClient();
+                var token = HttpContext.Session.GetString("AuthToken");
+
+                // Set the authorization header for the HttpClient
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                var url = $"http://localhost:5000/api/ManageTeacher/{id}/status?isActive={isActive}";
+
+                var response = await _httpClient.PutAsync(url, null); // No content body is needed for this request
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Index"); // Redirect back to the list of students after a successful update
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "An error occurred while updating the student status.");
+                    return View("Error"); // Replace with an appropriate error handling view
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "An error occurred while updating the student status.");
-                return View("Error"); // Replace with an appropriate error handling view
+                Console.WriteLine(ex.Message);
+                return RedirectToAction("Error", "Unauthorized");
             }
         }
         [HttpGet]
         public async Task<IActionResult> CreateTeacher()
         {
-            return View();
+            try
+            {
+                var token = HttpContext.Session.GetString("AuthToken");
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(token);
+
+                var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+
+                // Check if the user has the "Student" role
+                if (roleClaim == null)
+                {
+                    return RedirectToAction("Error", "Unauthorized");
+                }
+                return View();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return RedirectToAction("Error", "Unauthorized");
+            }
         }
         //[HttpPost]
         //public async Task<IActionResult> CreateTeacher(CreateTeacherDTO createTeacher)
@@ -51,26 +100,34 @@ namespace PRN231_FE.Controllers
         //}
         public async Task<IActionResult> DeleteTeacher(int id)
         {
-            var httpClient = _httpClientFactory.CreateClient();
-            var token = HttpContext.Session.GetString("AuthToken");
-
-            // Set the authorization header for the HttpClient
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            var url = $"http://localhost:5000/api/ManageTeacher/{id}";
-
-            // Sending the DELETE request
-            var response = await _httpClient.DeleteAsync(url);
-
-            // Check if the deletion was successful
-            if (response.IsSuccessStatusCode)
+            try
             {
-                TempData["SuccessMessage"] = "Student successfully deleted.";
-                return RedirectToAction("Index"); // Redirect back to the list of students after successful deletion
+                var httpClient = _httpClientFactory.CreateClient();
+                var token = HttpContext.Session.GetString("AuthToken");
+
+                // Set the authorization header for the HttpClient
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                var url = $"http://localhost:5000/api/ManageTeacher/{id}";
+
+                // Sending the DELETE request
+                var response = await _httpClient.DeleteAsync(url);
+
+                // Check if the deletion was successful
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["SuccessMessage"] = "Student successfully deleted.";
+                    return RedirectToAction("Index"); // Redirect back to the list of students after successful deletion
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "An error occurred while deleting the student.";
+                    return RedirectToAction("Index"); // Redirect back to the list of students with an error message
+                }
             }
-            else
+            catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "An error occurred while deleting the student.";
-                return RedirectToAction("Index"); // Redirect back to the list of students with an error message
+                Console.WriteLine(ex.Message);
+                return RedirectToAction("Error", "Unauthorized");
             }
         }
     }

@@ -12,10 +12,9 @@ namespace PRN231_API.Repository
         Task<Account> GetUserByUsernameAsync(string username);
         Task<CustomResponse> ActiveAccount(ActiveViewModel activeModel);
         Task<Account?> GetAccountByEmailAsync(string email);
-            Task<bool> SaveResetTokenAsync(int accountId, string token);
-            Task<Account?> GetAccountByResetTokenAsync(string token);
-            Task<bool> UpdatePasswordAsync(int accountId, string newPassword);
-        
-
+        Task<bool> SaveResetTokenAsync(int accountId, string token);
+        Task<Account?> GetAccountByResetTokenAsync(string token);
+        Task<bool> UpdatePasswordAsync(int accountId, string newPassword);
+        Task<Account?> GetAccountByEmailAndPasswordAsync(AccountLoginDto user);
     }
 }

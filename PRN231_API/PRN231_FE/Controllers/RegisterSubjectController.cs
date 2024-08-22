@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PRN231_FE.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace PRN231_FE.Controllers
@@ -28,8 +30,27 @@ namespace PRN231_FE.Controllers
                     TempData["AlertMessage"] = "Bạn cần đăng nhập để tiếp tục.";
                     return RedirectToAction("Login", "Account");
                 }
+
                 // Retrieve the token from the session
                 var token = HttpContext.Session.GetString("AuthToken");
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    TempData["AlertMessage"] = "Token không hợp lệ.";
+                    return RedirectToAction("Login", "Account");
+                }
+
+                // Validate role from the token
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(token);
+
+                var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+
+                // Check if the user has the "Student" role
+                if (roleClaim != "Student")
+                {
+                    return RedirectToAction("Error", "Unauthorized");
+                }
 
                 // Set the authorization header for the HttpClient
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
@@ -39,19 +60,22 @@ namespace PRN231_FE.Controllers
 
                 // Call the API to get the subjects the student is currently enrolled in
                 var subjectOfAccount = await _httpClient.GetFromJsonAsync<List<SubjectOfAccount>>($"http://localhost:5000/api/Subject/student/{accountId}");
-                if(subjectOfAccount == null)
+
+                // Check if there are no subjects
+                if (subjectOfAccount == null)
                 {
                     ViewBag.SubjectOfAccount = null;
                 }
+
                 // Pass the data and AccountId to the view
                 ViewBag.AccountId = accountId;
                 ViewBag.SubjectOfAccount = subjectOfAccount;
+
                 return View(subjects);
             }
             catch (Exception ex)
             {
                 // Handle any errors by logging and returning an empty list or an error message
-                // You can log the exception message for debugging
                 Console.WriteLine(ex.Message);
                 return View(new List<SubjectViewModel>());
             }
@@ -109,3 +133,4 @@ namespace PRN231_FE.Controllers
 
     }
 }
+

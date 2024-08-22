@@ -156,6 +156,24 @@ namespace PRN231_API.DAO
 
         }
 
+        public async Task<Account?> GetAccountByEmailAsync(string email)
+        {
+            return await _accountRepository.GetAccountByEmailAsync(email);
+        }
+
+        public async Task<Account?> GetAccountByEmailAndPasswordAsync(AccountLoginDto user)
+        {
+            try
+            {
+                return await _accountRepository.GetAccountByEmailAndPasswordAsync(user);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<CustomResponse> RegisterAccount(AccountRegisterDto userDto)
         {
             try

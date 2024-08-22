@@ -17,7 +17,7 @@ namespace PRN231_API.DAO
         }
         public async Task<List<GradeDTO>> GetStudentSubjectGradeAsync(int accountId, int subjectId)
         {
-            var student = await _sRepository.GetStudentByIdAsync(accountId);
+            var student = await _sRepository.GetStudentByAccountIdAsync(accountId);
             List<Evaluation> evaluations = await _eRepository.GetEvaluationBySubjectAndStudent(student.StudentId, subjectId);
             List<GradeDTO> grades = new List<GradeDTO>();   
             foreach (Evaluation e in evaluations)
