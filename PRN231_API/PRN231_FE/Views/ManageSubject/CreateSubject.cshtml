@@ -70,7 +70,20 @@
                     TeacherId: $('#TeacherId').val()
 
                 };
+                if (!formData.SubjectName && !formData.TeacherId) {
+                    alert('Vui lòng nhập tên môn học và chọn giáo viên.');
+                    return; // Dừng lại nếu cả hai đều thiếu
+                }
+                // Kiểm tra các trường nhập
+                if (!formData.SubjectName) {
+                    alert('Vui lòng nhập tên môn học.');
+                    return; // Dừng lại nếu thiếu tên môn học
+                }
 
+                if (!formData.TeacherId) {
+                    alert('Vui lòng chọn giáo viên.');
+                    return; // Dừng lại nếu chưa chọn giáo viên
+                }
                 $.ajax({
                     url: 'http://localhost:5000/api/ManageSubject/CreateSubject',
                     type: 'POST',

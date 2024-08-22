@@ -66,7 +66,25 @@
                     Password: $('#Password').val(),
                     IsActive: true // Assuming the teacher is active by default
                 };
+                if (!formData.TeacherName || !formData.Email || !formData.Password {
+                    alert('Vui lòng nhập đầy đủ thông tin.');
+                    return; // Dừng lại nếu thông tin chưa đầy đủ
+                }
+                // Kiểm tra các trường nhập
+                if (!formData.TeacherName) {
+                    alert('Vui lòng nhập tên giáo viên.');
+                    return; // Dừng lại nếu thiếu tên giáo viên
+                }
 
+                if (!formData.Email) {
+                    alert('Vui lòng nhập email.');
+                    return; // Dừng lại nếu thiếu email
+                }
+
+                if (!formData.Password) {
+                    alert('Vui lòng nhập mật khẩu.');
+                    return; // Dừng lại nếu thiếu mật khẩu
+                }
                 $.ajax({
                     url: 'http://localhost:5000/api/ManageTeacher/CreateTeacher',
                     type: 'POST',

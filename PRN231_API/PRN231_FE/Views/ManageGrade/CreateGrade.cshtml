@@ -49,7 +49,10 @@
                     GradeTypeName: $('#SubjectName').val()
 
                 };
-
+                if(!formData.GradeTypeName){
+                    alert('Please enter grade type');
+                    return;
+                }
                 $.ajax({
                     url: 'http://localhost:5000/api/ManageGradeType/CreateGradeType',
                     type: 'POST',
