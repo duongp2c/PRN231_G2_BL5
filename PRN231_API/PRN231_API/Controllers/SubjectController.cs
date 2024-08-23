@@ -43,6 +43,7 @@ namespace PRN231_API.Controllers
             var subjects = _subjectDAO.GetAllSubjects2Field().AsQueryable();
             return Ok(subjects);
         }
+
         [HttpGet("GetSubjectIdAndName")]
         public IActionResult GetSubjectIdAndName()
         {

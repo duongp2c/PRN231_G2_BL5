@@ -170,7 +170,7 @@
                             try {
                                 // Mã hóa URL nếu cần
                                 const encodedFilter = encodeURIComponent(filter);
-                                const url = filter ? `${apiUrl}?$filter=SubjectName eq '${encodedFilter}'` : apiUrl;
+                                const url = filter ? `${apiUrl}?$filter=startswith(SubjectName,'${encodedFilter}')` : apiUrl;
                                 const response = await fetch(url);
 
                                 if (!response.ok) {
